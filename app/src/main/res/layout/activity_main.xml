@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
@@ -22,8 +22,10 @@
             android:weightSum="10"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
 
             <ScrollView
@@ -41,6 +43,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
+                        <!--<RadioButton-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="Alice" />-->
+
+                        <!--<RadioButton-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="Bob" />-->
+
+                        <!--<RadioButton-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="Carol" />-->
+
+                        <!--<RadioButton-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="Dick" />-->
                     </RadioGroup>
 
                     <TextView
@@ -60,14 +81,14 @@
                         android:layout_height="wrap_content"
                         android:onClick="createNewPerson"
                         android:text="@string/submit"
-                        tools:layout_editor_absoluteX="49dp"
-                        tools:layout_editor_absoluteY="578dp" />
+                        tools:layout_editor_absoluteX="55dp"
+                        tools:layout_editor_absoluteY="641dp" />
 
                 </LinearLayout>
             </ScrollView>
 
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="6">
@@ -214,6 +235,7 @@
                     app:srcCompat="@android:drawable/arrow_down_float" />
 
                 <Button
+                    android:id="@+id/button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="submitDebt"
@@ -221,8 +243,27 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/substract100" />
-            </android.support.constraint.ConstraintLayout>
+                    app:layout_constraintTop_toBottomOf="@id/substract100"
+                    app:layout_constraintVertical_bias="0.037" />
+
+                <Button
+                    android:id="@+id/debts_display_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:onClick="showDebts"
+                    android:text="Show me debts"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button2" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ScrollView
                 android:layout_width="wrap_content"
@@ -236,12 +277,32 @@
                     android:layout_gravity="center"
                     android:orientation="vertical">
 
+                    <!--<CheckBox-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="Alice" />-->
+
+                    <!--<CheckBox-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="Bob" />-->
+
+                    <!--<CheckBox-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="Carol" />-->
+
+                    <!--<CheckBox-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="Dick" />-->
+
                 </LinearLayout>
             </ScrollView>
 
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
