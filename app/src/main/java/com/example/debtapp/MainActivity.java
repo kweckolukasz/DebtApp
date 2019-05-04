@@ -6,105 +6,165 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.debtapp.databinding.ActivityMainBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import Room.Person;
+import ViewModel.PeopleAdapter;
 import ViewModel.PersonViewModel;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import supportClasses.FindingUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PeopleAdapter.OnPersonListener {
 
-    ActivityMainBinding binding;
+//    ActivityMainBinding binding;
     Context context;
 
     Integer amount = 0;
     Integer amountDiff;
     Integer totalAmount;
     EditText mDebtAmount;
-    RadioGroup mRadioGroup;
-    LinearLayout mCheckboxes;
-    List<Person> personArrayList;
-    private PersonViewModel personViewModel;
+    EditText mNewPersonName;
+    RecyclerView mRadioGroup;
+    RecyclerView mCheckboxes;
+    FloatingActionButton mAddPerson;
 
+    List<Person> personArrayList = new ArrayList<>();
+
+    private PersonViewModel personViewModel;
     private static final String DEBT_AMOUNT_LESSER_THAN_0 = "cannot enter no-positive value, click change direction button to divert the arrow";
+    public static final int ADD_PERSON_REQUEST = 1;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String DEBT_MAIN_PEOPLE_LIST_MAIN_ACTIVITY = MainActivity.class.getSimpleName() + "global_people_list";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        context = getApplicationContext();
+        setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate: start");
 
-        personArrayList = new ArrayList<>();
-        mRadioGroup = binding.radioLeft;
-        mCheckboxes = binding.checkboxes;
+        context = getApplicationContext();
+        mAddPerson = findViewById(R.id.fab_add_new_person);
+        mRadioGroup = findViewById(R.id.radio_left);
+        mCheckboxes = findViewById(R.id.checkboxes);
+        mDebtAmount = findViewById(R.id.debt_amount);
         keepNoMinusValuesInsideDebtAmountText();
+
+        mCheckboxes.setLayoutManager(new LinearLayoutManager(this));
+        mCheckboxes.setHasFixedSize(true);
+
+        mRadioGroup.setLayoutManager(new LinearLayoutManager(this));
+        mRadioGroup.setHasFixedSize(true);
+
+        final PeopleAdapter adapter = new PeopleAdapter(this);
+        mCheckboxes.setAdapter(adapter);
+        mRadioGroup.setAdapter(adapter);
+
         personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
         personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
             @Override
-            public void onChanged(List<Person> people) {
-
+            public void onChanged(@Nullable List<Person> people) {
+                adapter.setPeople(people);
+                Log.d(TAG, "personViewModel -> observer -> onChanged");
             }
         });
+
+        mAddPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,AddPerson.class);
+                startActivityForResult(intent,ADD_PERSON_REQUEST);
+            }
+        });
+        Log.d(TAG, "onCreate: starting populate Bars");
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_PERSON_REQUEST && resultCode == RESULT_OK){
+            String name = data.getStringExtra(AddPerson.EXTRA_NAME);
+            Person person = new Person(name);
+            personViewModel.insert(person);
+            Log.d(TAG, "onActivityResult: personInserted");
+        } else {
+            Log.d(TAG, "onActivityResult: personNOTinserted");
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.delete_all_persons_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_all_item:
+                personViewModel.deleteAll();
+                return true;
+            default:return super.onOptionsItemSelected(item);
+        }
+    }
 
 
     private void keepNoMinusValuesInsideDebtAmountText() {
-        mDebtAmount = binding.debtAmount;
-        mDebtAmount.addTextChangedListener(new TextWatcher() {
+//        mDebtAmount = binding.debtAmount;
+        if (mDebtAmount != null) {
+            mDebtAmount.addTextChangedListener(new TextWatcher() {
 
-            int startValue;
-            int changedValue;
+                int startValue;
+                int changedValue;
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.length() > 0) startValue = Integer.valueOf(mDebtAmount.getText().toString());
-            }
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    if (s.length() > 0) startValue = Integer.valueOf(mDebtAmount.getText().toString());
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
-                    mDebtAmount.setText("0");
-                } else {
-                    changedValue = Integer.valueOf(s.toString());
-                    if (changedValue < 0) {
-                        Toast.makeText(getApplicationContext(), DEBT_AMOUNT_LESSER_THAN_0, Toast.LENGTH_LONG).show();
-                        mDebtAmount.setText(String.format("%d", startValue));
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 0) {
+                        mDebtAmount.setText("0");
+                    } else {
+                        changedValue = Integer.valueOf(s.toString());
+                        if (changedValue < 0) {
+                            Toast.makeText(getApplicationContext(), DEBT_AMOUNT_LESSER_THAN_0, Toast.LENGTH_LONG).show();
+                            mDebtAmount.setText(String.format("%d", startValue));
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+        }
     }
 
 
     public void calculate(View view) {
-        amount = Integer.valueOf(binding.debtAmount.getText().toString());
+
+        amount = Integer.valueOf(mDebtAmount.getText().toString());
         switch (view.getId()) {
             case R.id.add1:
                 amountDiff = 1;
@@ -126,48 +186,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         if ((amount + amountDiff) >= 0) {
-            amount = Integer.valueOf(binding.debtAmount.getText().toString());
+            amount = Integer.valueOf(mDebtAmount.getText().toString());
             totalAmount = amount + amountDiff;
-            binding.debtAmount.setText(String.format(Locale.US, "%d", totalAmount));
+            mDebtAmount.setText(String.format(Locale.US, "%d", totalAmount));
         }
         //TODO clear fields here
-    }
-
-
-    public void createNewPerson(View view) {
-
-
-        if (binding.newPersonName.getText() != null && !binding.newPersonName.getText().toString().equals("")) {
-            String personInput = binding.newPersonName.getText().toString();
-            boolean isNameNotRepeat = true;
-
-
-            //TODO new code here!
-            if (personArrayList != null && personArrayList.size() > 0) {
-                for (Person checkPerson : personArrayList) {
-                    if (checkPerson.getName().equals(personInput)) {
-                        isNameNotRepeat = false;
-                        Toast.makeText(context, "NAME REPEAT", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-            if (personArrayList != null && isNameNotRepeat) {
-                Person newPerson = new Person(personInput);
-                personArrayList.add(newPerson);
-                RadioButton rb = new RadioButton(this);
-                rb.setText(personInput);
-                rb.setId(personInput.hashCode());
-                mRadioGroup.addView(rb);
-                CheckBox cb = new CheckBox(this);
-                cb.setText(personInput);
-                cb.setId(personInput.hashCode());
-                mCheckboxes.addView(cb);
-            }
-        } else {
-            Toast.makeText(context, "empty input field, cannot create new person", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "createNewPerson: try to input empty field to create person");
-        }
-
     }
 
     public void submitDebt(View view) {
@@ -175,7 +198,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> namesOfReceivers = new ArrayList<>();
 
         //wyciągam imię pożyczającego
-        int checkedId = mRadioGroup.getCheckedRadioButtonId();
+        //TODO już nie masz RadioGroup!
+        //int checkedId = mRadioGroup.getCheckedRadioButtonId();
+        int checkedId = 123;
         RadioButton checked = mRadioGroup.findViewById(checkedId);
         String debtGiverName = checked.getText().toString();
 
@@ -216,4 +241,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    public void setPersonArrayList(List<Person> personArrayList) {
+        this.personArrayList = personArrayList;
+    }
+
+    @Override
+    public void onPersonClick(int position) {
+
+    }
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class DebtSet<String,Integer> implements Serializable {
-
+    private String debtor;
     private String name;
     private Integer value;
     private Date date;
@@ -45,5 +45,13 @@ public class DebtSet<String,Integer> implements Serializable {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public String getDebtor() {
+        return debtor;
+    }
+
+    public void setDebtor(String debtor) {
+        this.debtor = debtor;
     }
 }

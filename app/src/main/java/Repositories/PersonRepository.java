@@ -2,6 +2,7 @@ package Repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
 
@@ -16,7 +17,9 @@ public class PersonRepository {
 
     private LiveData<List<Person>> allPersons;
 
+    private String TAG = PersonRepository.class.getSimpleName();
     public PersonRepository(Application application){
+        Log.d(TAG, "PersonRepository: ");
         PersonDatabase database = PersonDatabase.getInstance(application);
         personDao = database.personDao();
         allPersons = personDao.getAllPersons();
@@ -24,18 +27,23 @@ public class PersonRepository {
     }
 
     public void insert(Person person){
+        Log.d(TAG, "insert: ");
         new InsertPersonAsyncTask(personDao).execute(person);
     }
     public void update(Person person){
+        Log.d(TAG, "update: ");
         new UpdatePersonAsyncTask(personDao).execute(person);
     }
     public void delete(Person person){
+        Log.d(TAG, "delete: ");
         new DeletePersonAsyncTask(personDao).execute(person);
     }
     public void deleteAll(){
+        Log.d(TAG, "deleteAll: ");
         new DeleteAllPersonAsyncTask(personDao).execute();
     }
     public LiveData<List<Person>> getAllPersons(){
+        Log.d(TAG, "getAllPersons: ");
         return allPersons;
     }
 
