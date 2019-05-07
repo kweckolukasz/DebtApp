@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/delete_all_item"
+        android:title="delete all"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/add_new_person_item"
+        android:title="add new person"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/show_list_of_persons_item"
+        android:title="list of persons"
+        app:showAsAction="never" />
+
+
+</menu>

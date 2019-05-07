@@ -17,7 +17,7 @@
     <string name="main_debt_desc_hint">click to type description</string>
     <string name="main_arrow_arrow"><![CDATA[------------------->]]></string>
     <string name="activity_main_enter_new_person">enter new person</string>
-    <string name="name">name</string>
+    <string name="creditor">creditor</string>
     <string name="submit">submit</string>
     <string name="accept_debt">accept debt</string>
 

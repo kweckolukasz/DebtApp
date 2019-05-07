@@ -10,7 +10,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = Person.class, version = 3, exportSchema = false)
+@Database(entities = Person.class, version = 5, exportSchema = false)
 public abstract class PersonDatabase extends RoomDatabase {
 
     private static String TAG = PersonDatabase.class.getSimpleName();
@@ -54,9 +54,9 @@ public abstract class PersonDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
             Log.d(TAG, "doInBackground: inserting people");
             personDao.insert(new Person("Alice"));
-//            personDao.insert(new Person("Bob"));
-//            personDao.insert(new Person("Carol"));
-//            personDao.insert(new Person("Dick"));
+            personDao.insert(new Person("Bob"));
+            personDao.insert(new Person("Carol"));
+            personDao.insert(new Person("Dick"));
             return null;
         }
     }

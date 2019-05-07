@@ -31,6 +31,26 @@ public class Person implements Serializable, Comparable<Person> {
 
     private Integer balance;
 
+    private boolean currentCreditor;
+
+    public boolean isCurrentCreditor() {
+        return currentCreditor;
+    }
+
+    public void setCurrentCreditor(boolean currentCreditor) {
+        this.currentCreditor = currentCreditor;
+    }
+
+    public boolean isCurrentDebtor() {
+        return currentDebtor;
+    }
+
+    public void setCurrentDebtor(boolean currentDebtor) {
+        this.currentDebtor = currentDebtor;
+    }
+
+    private boolean currentDebtor;
+
     private boolean balanced;
     @TypeConverters(supportClasses.TypeConverters.class)
     private ArrayList<DebtSet> debtSets;
@@ -43,11 +63,11 @@ public class Person implements Serializable, Comparable<Person> {
         moneyFlow = new ArrayList<>();
         balanced = false;
     }
-    public void addMoneyFlow(String name, Integer value){
-        moneyFlow.add(new DebtSet(name, value));
+    public void addMoneyFlow(String creditor, Integer value, String debtor){
+        moneyFlow.add(new DebtSet(creditor, value, debtor));
     }
-    public void addDebt(String name, Integer value){
-        debtSets.add(new DebtSet(name,value));
+    public void addDebt(String creditor, Integer value, String debtor){
+        debtSets.add(new DebtSet(creditor,value, debtor));
     }
 
     @Override

@@ -9,9 +9,7 @@ import android.widget.TextView;
 import com.example.debtapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import Room.Person;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import supportClasses.DebtSet;
@@ -19,26 +17,8 @@ import supportClasses.DebtSet;
 public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
 
     private String TAG = DebtAdapter.class.getSimpleName();
-    private List<Person> people = new ArrayList<>();
-    private ArrayList<DebtSet> allDebts = retrieveListOfDebts();
+    private ArrayList<DebtSet> allDebts = new ArrayList<>();
 
-    private ArrayList<DebtSet> retrieveListOfDebts() {
-        Log.d(TAG, "retrieveListOfDebts from people list - size: "+people.size());
-        ArrayList<DebtSet> debtSets = new ArrayList<>();
-        for (Person pe : people) {
-            for (DebtSet ds : pe.getDebtSets()) {
-                ds.setDebtor(pe.getName());
-                debtSets.add(ds);
-            }
-        }
-        return debtSets;
-    }
-
-    public void setPeople(List<Person> people) {
-        Log.d(TAG, "setPeople");
-        this.people = people;
-        notifyDataSetChanged();
-    }
 
     @NonNull
     @Override
@@ -53,9 +33,9 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
     public void onBindViewHolder(@NonNull DebtHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder");
         DebtSet current = allDebts.get(position);
-        holder.mDebtorTextView.setText((String) current.getDebtor());
+        holder.mCreditorTextView.setText(current.getCreditor());
         holder.mAmountTextView.setText(String.valueOf(current.getValue()));
-        holder.mCreditorTextView.setText((String) current.getName());
+        holder.mDebtorTextView.setText(current.getDebtor());
     }
 
     @Override
@@ -64,18 +44,23 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
         return allDebts.size();
     }
 
+    public void setDebtSets(ArrayList<DebtSet> debtSets) {
+        this.allDebts = debtSets;
+        notifyDataSetChanged();
+    }
+
     class DebtHolder extends RecyclerView.ViewHolder {
-        private TextView mDebtorTextView;
-        private TextView mAmountTextView;
         private TextView mCreditorTextView;
+        private TextView mAmountTextView;
+        private TextView mDebtorTextView;
 
         public DebtHolder(@NonNull View itemView) {
 
             super(itemView);
             Log.d(TAG, "DebtHolder");
-            mDebtorTextView = itemView.findViewById(R.id.debtor_textView);
-            mAmountTextView = itemView.findViewById(R.id.amount_textView);
             mCreditorTextView = itemView.findViewById(R.id.creditor_textView);
+            mAmountTextView = itemView.findViewById(R.id.amount_textView);
+            mDebtorTextView = itemView.findViewById(R.id.debtor_textView);
         }
     }
 }

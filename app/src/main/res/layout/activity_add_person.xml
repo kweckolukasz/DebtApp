@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddPerson"
+    tools:context=".AddEditPerson"
     android:padding="16dp">
     <EditText
         android:id="@+id/edit_text_new_person_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="name"/>
+        android:hint="creditor"/>
 
 
 </LinearLayout>

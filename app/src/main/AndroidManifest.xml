@@ -13,11 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddPerson"
-            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".PeopleList"></activity>
+        <activity
+            android:name=".AddEditPerson"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".HistoryActivity" />
-        <activity android:name=".MainActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name">

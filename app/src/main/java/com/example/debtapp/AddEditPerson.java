@@ -10,25 +10,31 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AddPerson extends AppCompatActivity {
+public class AddEditPerson extends AppCompatActivity {
 
-    public static final String EXTRA_NAME = AddPerson.class.getPackage().getName()+"Extra_name";
-
-    private EditText mName;
+    public static final String EXTRA_NAME = AddEditPerson.class.getPackage().getName()+"Extra_name";
+    public static final String EXTRA_ID = AddEditPerson.class.getPackage().getName()+"Extra_id";
+    private EditText mNameEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_person);
 
-        mName = findViewById(R.id.edit_text_new_person_name);
+        mNameEditText = findViewById(R.id.edit_text_new_person_name);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("add person");
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ID)){
+            setTitle("edit Person");
+            mNameEditText.setText(intent.getStringExtra(EXTRA_NAME));
+        }else {
+            setTitle("add person");
+        }
     }
 
     private void savePerson() {
-        String name = mName.getText().toString();
+        String name = mNameEditText.getText().toString();
 
         if (name.trim().isEmpty()){
             Toast.makeText(this, "noName", Toast.LENGTH_LONG).show();
@@ -36,6 +42,10 @@ public class AddPerson extends AppCompatActivity {
         }
 
         Intent data = new Intent();
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if (id!=-1){
+            data.putExtra(EXTRA_ID, id);
+        }
         data.putExtra(EXTRA_NAME, name);
         setResult(RESULT_OK,data);
         finish();

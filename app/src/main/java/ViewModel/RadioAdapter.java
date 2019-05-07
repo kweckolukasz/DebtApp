@@ -14,13 +14,13 @@ import Room.Person;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PersonHolder> {
+public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.PersonHolder> {
 
     private List<Person> people = new ArrayList<>();
-    private OnPersonListener onPersonListener;
+    private OnPersonRadioListener onPersonRadioListener;
 
-    public PeopleAdapter(OnPersonListener onPersonListener) {
-        this.onPersonListener = onPersonListener;
+    public RadioAdapter(OnPersonRadioListener onPersonRadioListener) {
+        this.onPersonRadioListener = onPersonRadioListener;
     }
 
     public void setPeople(List<Person> people) {
@@ -33,13 +33,14 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PersonHold
     public PersonHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.person_item, parent, false);
-        return new PersonHolder(itemView, onPersonListener);
+        return new PersonHolder(itemView, onPersonRadioListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PersonHolder holder, int position) {
         Person current = people.get(position);
-        holder.personName.setText(current.getName());
+        holder.personTextView.setText(current.getName());
+        holder.itemView.setId(current.getId());
 
     }
 
@@ -51,24 +52,30 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PersonHold
 
     class PersonHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        OnPersonListener onPersonListener;
-        private TextView personName;
+        OnPersonRadioListener onPersonRadioListener;
+        private TextView personTextView;
 
-        public PersonHolder(@NonNull View itemView, OnPersonListener onPersonListener) {
+        public PersonHolder(@NonNull View itemView, OnPersonRadioListener onPersonRadioListener) {
             super(itemView);
-            personName = itemView.findViewById(R.id.item_person_name);
-            this.onPersonListener = onPersonListener;
+            personTextView = itemView.findViewById(R.id.item_person_name);
+            this.onPersonRadioListener = onPersonRadioListener;
             itemView.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View v) {
-            onPersonListener.onPersonClick(getAdapterPosition());
+//            onPersonRadioListener.onPersonRadioClick(getAdapterPosition());
+            int position = getAdapterPosition();
+            if (onPersonRadioListener != null && position != RecyclerView.NO_POSITION){
+                Person person = people.get(position);
+                onPersonRadioListener.onPersonRadioClick(person);
+
+            }
         }
     }
 
-    public interface OnPersonListener{
-        void onPersonClick(int position);
+    public interface OnPersonRadioListener {
+        void onPersonRadioClick(Person person);
     }
 }

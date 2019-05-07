@@ -3,24 +3,25 @@ package supportClasses;
 import java.io.Serializable;
 import java.util.Date;
 
-public class DebtSet<String,Integer> implements Serializable {
+public class DebtSet implements Serializable {
     private String debtor;
-    private String name;
+    private String creditor;
     private Integer value;
     private Date date;
     private String place;
 
-    public DebtSet(String name, Integer value) {
-        this.name = name;
+    public DebtSet(String creditor, Integer value, String debtor) {
+        this.creditor = creditor;
         this.value = value;
+        this.debtor = debtor;
     }
 
-    public String getName() {
-        return name;
+    public String getCreditor() {
+        return creditor;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCreditor(String creditor) {
+        this.creditor = creditor;
     }
 
     public Integer getValue() {

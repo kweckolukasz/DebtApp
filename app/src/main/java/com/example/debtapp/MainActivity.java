@@ -10,43 +10,42 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Toast;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import Room.Person;
-import ViewModel.PeopleAdapter;
+import ViewModel.CheckboxesAdapter;
 import ViewModel.PersonViewModel;
+import ViewModel.RadioAdapter;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import supportClasses.FindingUtils;
 
-public class MainActivity extends AppCompatActivity implements PeopleAdapter.OnPersonListener {
+public class MainActivity extends AppCompatActivity implements CheckboxesAdapter.OnPeopleCheckboxesListener, RadioAdapter.OnPersonRadioListener {
 
-//    ActivityMainBinding binding;
     Context context;
 
     Integer amount = 0;
     Integer amountDiff;
     Integer totalAmount;
     EditText mDebtAmount;
-    EditText mNewPersonName;
-    RecyclerView mRadioGroup;
-    RecyclerView mCheckboxes;
-    FloatingActionButton mAddPerson;
+    RecyclerView mRadioGroupRecyclerView;
+    RecyclerView mCheckboxesRecyclerView;
 
-    List<Person> personArrayList = new ArrayList<>();
+//    Button mAddEditPersonButton;
+//    Button mListOfPeopleButton;
+
+
+    List<Person> peopleArraylist = new ArrayList<>();
+    Person currentCreditor;
+    ArrayList<Person> currentDebtors = new ArrayList<>();
 
     private PersonViewModel personViewModel;
     private static final String DEBT_AMOUNT_LESSER_THAN_0 = "cannot enter no-positive value, click change direction button to divert the arrow";
@@ -61,47 +60,117 @@ public class MainActivity extends AppCompatActivity implements PeopleAdapter.OnP
         Log.d(TAG, "onCreate: start");
 
         context = getApplicationContext();
-        mAddPerson = findViewById(R.id.fab_add_new_person);
-        mRadioGroup = findViewById(R.id.radio_left);
-        mCheckboxes = findViewById(R.id.checkboxes);
+//        mAddEditPersonButton = findViewById(R.id.button_add_new_person);
+        mRadioGroupRecyclerView = findViewById(R.id.radio_left);
+        mCheckboxesRecyclerView = findViewById(R.id.checkboxes);
         mDebtAmount = findViewById(R.id.debt_amount);
+//        mListOfPeopleButton = findViewById(R.id.button_show_list_of_people);
+
         keepNoMinusValuesInsideDebtAmountText();
 
-        mCheckboxes.setLayoutManager(new LinearLayoutManager(this));
-        mCheckboxes.setHasFixedSize(true);
+        mCheckboxesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mCheckboxesRecyclerView.setHasFixedSize(true);
 
-        mRadioGroup.setLayoutManager(new LinearLayoutManager(this));
-        mRadioGroup.setHasFixedSize(true);
+        mRadioGroupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRadioGroupRecyclerView.setHasFixedSize(true);
 
-        final PeopleAdapter adapter = new PeopleAdapter(this);
-        mCheckboxes.setAdapter(adapter);
-        mRadioGroup.setAdapter(adapter);
+
+        final CheckboxesAdapter checkboxesAdapter = new CheckboxesAdapter(this);
+        final RadioAdapter radioAdapter = new RadioAdapter(this);
+        mCheckboxesRecyclerView.setAdapter(checkboxesAdapter);
+        mRadioGroupRecyclerView.setAdapter(radioAdapter);
+
 
         personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
         personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
             @Override
             public void onChanged(@Nullable List<Person> people) {
-                adapter.setPeople(people);
+                checkboxesAdapter.setPeople(people);
+                radioAdapter.setPeople(people);
+                setPeopleArraylist(people);
                 Log.d(TAG, "personViewModel -> observer -> onChanged");
             }
         });
 
-        mAddPerson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,AddPerson.class);
-                startActivityForResult(intent,ADD_PERSON_REQUEST);
-            }
-        });
-        Log.d(TAG, "onCreate: starting populate Bars");
-
+//        mAddEditPersonButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, AddEditPerson.class);
+//                startActivityForResult(intent, ADD_PERSON_REQUEST);
+//            }
+//        });
+//        mListOfPeopleButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, PeopleList.class);
+//                startActivity(intent);
+//            }
+//        });
     }
+
+    @Override
+    public void onPersonRadioClick(Person person) {
+        int id = person.getId();
+        if (currentCreditor == null){
+            currentCreditor = person;
+            mRadioGroupRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.green));
+            return;
+        }
+        if (!person.equals(currentCreditor)) {
+            mRadioGroupRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.green));
+            currentCreditor = person;
+//            person.setCurrentCreditor(true);
+//            personViewModel.update(person);
+            for (Person person1 : peopleArraylist) {
+                if (!person1.equals(currentCreditor)) {
+//                        person1.setCurrentCreditor(false);
+//                        personViewModel.update(person1);
+                    mRadioGroupRecyclerView.findViewById(person1.getId()).setBackgroundColor(getResources().getColor(R.color.white));
+                }
+            }
+            return;
+        }
+        if (person.equals(currentCreditor)){
+            currentCreditor = null;
+//            person.setCurrentCreditor(false);
+//            personViewModel.update(person);
+            mRadioGroupRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.white));
+        }
+    }
+
+    @Override
+    public void onPersonCheckboxClick(Person person) {
+        int id = person.getId();
+        boolean currentDebtor = false;
+        for (Person debtor : currentDebtors) {
+            if (person.equals(debtor)) currentDebtor = true;
+        }
+        if (!currentDebtor) {
+            //            person.setCurrentDebtor(true);
+//            personViewModel.update(person);
+            currentDebtors.add(person);
+            mCheckboxesRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.green));
+
+        } else {
+//            person.setCurrentDebtor(false);
+//            personViewModel.update(person);
+            currentDebtors.remove(person);
+            mCheckboxesRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.white));
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_PERSON_REQUEST && resultCode == RESULT_OK){
-            String name = data.getStringExtra(AddPerson.EXTRA_NAME);
+        if (requestCode == ADD_PERSON_REQUEST && resultCode == RESULT_OK) {
+            String name = data.getStringExtra(AddEditPerson.EXTRA_NAME);
+            for (Person person:peopleArraylist){
+                if (person.getName().equals(name)){
+                    Toast.makeText(this,"names can't repeat", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
             Person person = new Person(name);
             personViewModel.insert(person);
             Log.d(TAG, "onActivityResult: personInserted");
@@ -113,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements PeopleAdapter.OnP
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.delete_all_persons_menu, menu);
+        menuInflater.inflate(R.menu.main_activity_menu, menu);
         return true;
     }
 
@@ -123,7 +192,16 @@ public class MainActivity extends AppCompatActivity implements PeopleAdapter.OnP
             case R.id.delete_all_item:
                 personViewModel.deleteAll();
                 return true;
-            default:return super.onOptionsItemSelected(item);
+            case R.id.add_new_person_item:
+                Intent intent = new Intent(MainActivity.this, AddEditPerson.class);
+                startActivityForResult(intent, ADD_PERSON_REQUEST);
+                return true;
+            case R.id.show_list_of_persons_item:
+                Intent intent2 = new Intent(MainActivity.this, PeopleList.class);
+                startActivity(intent2);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -138,7 +216,8 @@ public class MainActivity extends AppCompatActivity implements PeopleAdapter.OnP
 
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    if (s.length() > 0) startValue = Integer.valueOf(mDebtAmount.getText().toString());
+                    if (s.length() > 0)
+                        startValue = Integer.valueOf(mDebtAmount.getText().toString());
                 }
 
                 @Override
@@ -194,60 +273,41 @@ public class MainActivity extends AppCompatActivity implements PeopleAdapter.OnP
     }
 
     public void submitDebt(View view) {
-
-        ArrayList<String> namesOfReceivers = new ArrayList<>();
-
-        //wyciągam imię pożyczającego
-        //TODO już nie masz RadioGroup!
-        //int checkedId = mRadioGroup.getCheckedRadioButtonId();
-        int checkedId = 123;
-        RadioButton checked = mRadioGroup.findViewById(checkedId);
-        String debtGiverName = checked.getText().toString();
-
-        //wyciągam imiona wierzycieli
-        for (int i = 0; i < mCheckboxes.getChildCount(); i++) {
-            View potentialCheckbox = mCheckboxes.getChildAt(i);
-            if (potentialCheckbox instanceof CheckBox) {
-                CheckBox potentialReceiver = (CheckBox) potentialCheckbox;
-                if (potentialReceiver.isChecked()) {
-                    String receiverName = potentialReceiver.getText().toString();
-                    namesOfReceivers.add(receiverName);
-                }
-            }
+        Integer value = Integer.valueOf(mDebtAmount.getText().toString());
+        if (value <= 0) {
+            Toast.makeText(this, "debt can't be 0 or less", Toast.LENGTH_LONG).show();
+            return;
         }
-
-        amount = Integer.valueOf(mDebtAmount.getText().toString());
-
-        //TODO new code here!
-        //znajduje obiekt Person szukając po wyciągniętym imieniu
-        Person debtGiverNew = FindingUtils.findPersonByName(personArrayList, debtGiverName);
-
-        if (debtGiverName != null) {
-            for (String name : namesOfReceivers) {
-                debtGiverNew.addDebt(name, amount);
-                FindingUtils.findPersonByName(personArrayList, name).addDebt(debtGiverName, amount * (-1));
-            }
-        } else {
-            Log.d(TAG, "submitDebt() debtGiverName not found in personArraylist");
+        if (currentCreditor == null || currentDebtors.size()==0){
+            Toast.makeText(this, "have to choose at least one creditor and one debtor", Toast.LENGTH_LONG).show();
+            return;
         }
+        //ustawiam debtSety
+        for (Person debtor : currentDebtors) {
+            currentCreditor.addDebt(currentCreditor.getName(), value, debtor.getName());
+            debtor.setBalance(debtor.getBalance()-value);
+            personViewModel.update(debtor);
+            mCheckboxesRecyclerView.findViewById(debtor.getId()).setBackgroundColor(getResources().getColor(R.color.white));
+            currentCreditor.setBalance(currentCreditor.getBalance()+value);
+        }
+        personViewModel.update(currentCreditor);
+        mCheckboxesRecyclerView.findViewById(currentCreditor.getId()).setBackgroundColor(getResources().getColor(R.color.white));
+        currentCreditor = null;
+
     }
 
     public void showDebts(View view) {
         //TODO zapisz global map do bundle i InstateState
         Intent intent = new Intent(this, HistoryActivity.class);
-        //intent.putExtra(DEBT_MAIN_PEOPLE_LIST_MAIN_ACTIVITY, personArrayList);
+        //intent.putExtra(DEBT_MAIN_PEOPLE_LIST_MAIN_ACTIVITY, peopleArraylist);
         Log.d(TAG, "showDebts: starting HistoryActivity");
         startActivity(intent);
-
     }
 
 
-    public void setPersonArrayList(List<Person> personArrayList) {
-        this.personArrayList = personArrayList;
+    public void setPeopleArraylist(List<Person> peopleArraylist) {
+        this.peopleArraylist = peopleArraylist;
     }
 
-    @Override
-    public void onPersonClick(int position) {
 
-    }
 }
