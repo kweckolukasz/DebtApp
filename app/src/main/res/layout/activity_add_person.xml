@@ -11,7 +11,7 @@
         android:id="@+id/edit_text_new_person_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="creditor"/>
+        android:hint="person name"/>
 
 
 </LinearLayout>

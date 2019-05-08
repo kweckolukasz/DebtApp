@@ -1,5 +1,6 @@
 package com.example.debtapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -20,6 +21,11 @@ public class HistoryActivity extends AppCompatActivity {
 
 
     private PersonViewModel personViewModel;
+    private Context context;
+
+    public Context getContext() {
+        return context;
+    }
 //    ArrayList<Person> people;
 //    LinearLayout mDebtGiverNameCol;
 //    LinearLayout mAmountCol;
@@ -50,8 +56,15 @@ public class HistoryActivity extends AppCompatActivity {
                     Log.d(TAG, "retrieveListOfDebts from people list - size: "+people.size());
                     ArrayList<DebtSet> debtSets = new ArrayList<>();
                     for (Person pe : people) {
-                        if (!pe.getDebtSets().isEmpty()) debtSets.addAll(pe.getDebtSets());
+                        if (!pe.getDebtSets().isEmpty()) {
+                            for (DebtSet debtSet: pe.getDebtSets()){
+                                if (!debtSet.getDebtor().equals(debtSet.getCreditor())){
+                                    debtSets.add(debtSet);
+                                }
+                            }
+                        }
                     }
+                Log.d(TAG, "onChanged: sending debts to adapter: size: "+debtSets.size());
 
                 adapter.setDebtSets(debtSets);
             }
@@ -64,47 +77,8 @@ public class HistoryActivity extends AppCompatActivity {
 //        createMoneyFlows(0, people.size() - 1);
 //        displayMoneyFlow();
 
-//        mDebtGiverNameCol = binding.name;
-//        mAmountCol = binding.amount;
-//        mReceiverNameCol = binding.receiverName;
-//        mAccountSetling = binding.accountSettling;
-//        people = (ArrayList<Person>) getIntent().getSerializableExtra(MainActivity.DEBT_MAIN_PEOPLE_LIST_MAIN_ACTIVITY);
     }
 
-//    private void readDataFromMainActivity() {
-//        //TODO new code here!
-//        for (Person person : people) {
-//            if (person.getDebtSets() != null) {
-//                ArrayList<DebtSet> personDebts = person.getDebtSets();
-//                for (DebtSet debt : personDebts) {
-//                    Integer value = (Integer) debt.getValue();
-//                    if (value > 0) {
-//                        TextView name = new TextView(getApplicationContext());
-//                        name.setText(person.getCreditor());
-//                        name.setTypeface(null, Typeface.BOLD);
-//                        name.setTextColor(getResources().getColor(R.color.black));
-//                        //mDebtGiverNameCol.addView(name);
-//
-//
-//                        TextView amount = new TextView(getApplicationContext());
-//                        amount.setText(String.format(Locale.US, "%d", value));
-//                        amount.setTypeface(null, Typeface.BOLD);
-//                        amount.setTextColor(getResources().getColor(R.color.white));
-//                        amount.setBackgroundColor(getResources().getColor(R.color.green));
-//                        //mAmountCol.addView(amount);
-//
-//                        TextView receiver = new TextView(getApplicationContext());
-//                        receiver.setText((String) debt.getCreditor());
-//                        receiver.setTextColor(getResources().getColor(R.color.black));
-//                        receiver.setTypeface(null, Typeface.BOLD);
-//                        //mReceiverNameCol.addView(receiver);
-//                    }
-//                }
-//            } else {
-//                Log.d(TAG, "readDataFromMainActivity: attempted to read null personDebts arraylist");
-//            }
-//        }
-//    }
 //
 //    public void showSimplifiedSettlingAcounts() {
 //
@@ -138,35 +112,35 @@ public class HistoryActivity extends AppCompatActivity {
 //
 //    public void createMoneyFlows(int creditorIndex, int debtorIndex) {
 //
-//        Person creditor = people.get(creditorIndex);
-//        Person debtor = people.get(debtorIndex);
-//        //TODO do optymalizacji: metoda powinna wyszukiwać takich połączeń w których zachodzi equals, eliminować, po tym robić poniższe
-//        if (debtor.getBalance().compareTo(0)<0) {
-//            if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))>0) {
-//                debtor.addMoneyFlow(creditor.getCreditor(), debtor.getBalance());
-//                creditor.setBalance(creditor.getBalance() + debtor.getBalance());
-//                debtor.setBalance(0);
-//                debtor.setBalanced(true);
-//                debtorIndex--;
-//                createMoneyFlows(creditorIndex, debtorIndex);
-//            } else if (creditor.getBalance().equals(Math.abs(debtor.getBalance()))) {
-//                creditor.setBalance(0);
-//                creditor.setBalanced(true);
-//                creditorIndex++;
-//                debtor.addMoneyFlow(creditor.getCreditor(), debtor.getBalance());
-//                debtor.setBalance(0);
-//                debtor.setBalanced(true);
-//                debtorIndex--;
-//                createMoneyFlows(creditorIndex, debtorIndex);
-//            } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))<0) {
-//                debtor.setBalance(debtor.getBalance() + creditor.getBalance());
-//                debtor.addMoneyFlow(creditor.getCreditor(), creditor.getBalance());
-//                creditor.setBalanced(true);
-//                creditor.setBalance(0);
-//                creditorIndex++;
-//                createMoneyFlows(creditorIndex, debtorIndex);
-//            }
-//        }
+//        //        Person creditor = people.get(creditorIndex);
+////        Person debtor = people.get(debtorIndex);
+////        //TODO do optymalizacji: metoda powinna wyszukiwać takich połączeń w których zachodzi equals, eliminować, po tym robić poniższe
+////        if (debtor.getBalance().compareTo(0)<0) {
+////            if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))>0) {
+////                debtor.addMoneyFlow(creditor.getCreditor(), debtor.getBalance());
+////                creditor.setBalance(creditor.getBalance() + debtor.getBalance());
+////                debtor.setBalance(0);
+////                debtor.setBalanced(true);
+////                debtorIndex--;
+////                createMoneyFlows(creditorIndex, debtorIndex);
+////            } else if (creditor.getBalance().equals(Math.abs(debtor.getBalance()))) {
+////                creditor.setBalance(0);
+////                creditor.setBalanced(true);
+////                creditorIndex++;
+////                debtor.addMoneyFlow(creditor.getCreditor(), debtor.getBalance());
+////                debtor.setBalance(0);
+////                debtor.setBalanced(true);
+////                debtorIndex--;
+////                createMoneyFlows(creditorIndex, debtorIndex);
+////            } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))<0) {
+////                debtor.setBalance(debtor.getBalance() + creditor.getBalance());
+////                debtor.addMoneyFlow(creditor.getCreditor(), creditor.getBalance());
+////                creditor.setBalanced(true);
+////                creditor.setBalance(0);
+////                creditorIndex++;
+////                createMoneyFlows(creditorIndex, debtorIndex);
+////            }
+////        }
 //
 //
 //    }
@@ -194,14 +168,4 @@ public class HistoryActivity extends AppCompatActivity {
 //        }
 //    }
 
-
-
-//    @Override
-//    protected void onDestroy() {
-//        Gson gson = new Gson();
-//        for (Person p :people){
-//            String jsonHistory = gson.toJson(p);
-//        }
-//        super.onDestroy();
-//    }
 }

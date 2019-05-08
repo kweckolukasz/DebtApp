@@ -13,6 +13,14 @@
         android:id="@+id/show_list_of_persons_item"
         android:title="list of persons"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/clear_all_debts_and_data"
+        android:title="clear all persons"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/resolve_all_debts_item"
+        android:title="resolve all debts"
+        app:showAsAction="never"/>
 
 
 </menu>

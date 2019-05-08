@@ -29,29 +29,11 @@ public class Person implements Serializable, Comparable<Person> {
 
     private String surName;
 
-    private Integer balance;
+    private Integer balance = 0;
 
-    private boolean currentCreditor;
-
-    public boolean isCurrentCreditor() {
-        return currentCreditor;
-    }
-
-    public void setCurrentCreditor(boolean currentCreditor) {
-        this.currentCreditor = currentCreditor;
-    }
-
-    public boolean isCurrentDebtor() {
-        return currentDebtor;
-    }
-
-    public void setCurrentDebtor(boolean currentDebtor) {
-        this.currentDebtor = currentDebtor;
-    }
-
-    private boolean currentDebtor;
 
     private boolean balanced;
+
     @TypeConverters(supportClasses.TypeConverters.class)
     private ArrayList<DebtSet> debtSets;
     @TypeConverters(supportClasses.TypeConverters.class)

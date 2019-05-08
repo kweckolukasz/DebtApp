@@ -41,7 +41,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
     public void onBindViewHolder(@NonNull PersonListHolder holder, int position) {
         Person current = people.get(position);
         holder.nameTextView.setText(current.getName());
-        holder.surNameTextView.setText(String.valueOf(current.isCurrentCreditor()));
         holder.balanceTextView.setText(String.valueOf(current.getBalance()));
     }
 

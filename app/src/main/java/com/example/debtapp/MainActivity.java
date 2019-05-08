@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +28,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import supportClasses.DebtSet;
 
 public class MainActivity extends AppCompatActivity implements CheckboxesAdapter.OnPeopleCheckboxesListener, RadioAdapter.OnPersonRadioListener {
 
@@ -119,12 +121,8 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         if (!person.equals(currentCreditor)) {
             mRadioGroupRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.green));
             currentCreditor = person;
-//            person.setCurrentCreditor(true);
-//            personViewModel.update(person);
             for (Person person1 : peopleArraylist) {
                 if (!person1.equals(currentCreditor)) {
-//                        person1.setCurrentCreditor(false);
-//                        personViewModel.update(person1);
                     mRadioGroupRecyclerView.findViewById(person1.getId()).setBackgroundColor(getResources().getColor(R.color.white));
                 }
             }
@@ -132,8 +130,6 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         }
         if (person.equals(currentCreditor)){
             currentCreditor = null;
-//            person.setCurrentCreditor(false);
-//            personViewModel.update(person);
             mRadioGroupRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.white));
         }
     }
@@ -200,8 +196,60 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 Intent intent2 = new Intent(MainActivity.this, PeopleList.class);
                 startActivity(intent2);
                 return true;
+            case R.id.clear_all_debts_and_data:
+                clearAlldebtsAndData();
+                return true;
+            case R.id.resolve_all_debts_item:
+                Collections.sort(peopleArraylist);
+                createMoneyFlows(0, peopleArraylist.size()-1);
+                Intent intent3 = new Intent(MainActivity.this, DebtsResolve.class);
+                startActivity(intent3);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void createMoneyFlows(int creditorIndex, int debtorIndex) {
+        Person creditor = peopleArraylist.get(creditorIndex);
+        Person debtor = peopleArraylist.get(debtorIndex);
+        //TODO do optymalizacji: metoda powinna wyszukiwać takich połączeń w których zachodzi equals, eliminować, po tym robić poniższe
+        if (debtor.getBalance().compareTo(0)<0) {
+            if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))>0) {
+                debtor.addMoneyFlow(creditor.getName(), debtor.getBalance(), debtor.getName());
+                creditor.setBalance(creditor.getBalance() + debtor.getBalance());
+                debtor.setBalance(0);
+                debtor.setBalanced(true);
+                debtorIndex--;
+                createMoneyFlows(creditorIndex, debtorIndex);
+            } else if (creditor.getBalance().equals(Math.abs(debtor.getBalance()))) {
+                creditor.setBalance(0);
+                creditor.setBalanced(true);
+                creditorIndex++;
+                debtor.addMoneyFlow(creditor.getName(), debtor.getBalance(), debtor.getName());
+                debtor.setBalance(0);
+                debtor.setBalanced(true);
+                debtorIndex--;
+                createMoneyFlows(creditorIndex, debtorIndex);
+            } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))<0) {
+                debtor.setBalance(debtor.getBalance() + creditor.getBalance());
+                debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
+                creditor.setBalanced(true);
+                creditor.setBalance(0);
+                creditorIndex++;
+                createMoneyFlows(creditorIndex, debtorIndex);
+            }
+        }
+        personViewModel.update(creditor);
+        personViewModel.update(debtor);
+    }
+
+    private void clearAlldebtsAndData() {
+        for (Person person:peopleArraylist){
+            person.setBalance(0);
+            person.setDebtSets(new ArrayList<DebtSet>());
+            person.setMoneyFlow(new ArrayList<DebtSet>());
+            personViewModel.update(person);
         }
     }
 
@@ -278,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             Toast.makeText(this, "debt can't be 0 or less", Toast.LENGTH_LONG).show();
             return;
         }
-        if (currentCreditor == null || currentDebtors.size()==0){
+        if (currentCreditor == null || currentDebtors.isEmpty()){
             Toast.makeText(this, "have to choose at least one creditor and one debtor", Toast.LENGTH_LONG).show();
             return;
         }
@@ -286,13 +334,15 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         for (Person debtor : currentDebtors) {
             currentCreditor.addDebt(currentCreditor.getName(), value, debtor.getName());
             debtor.setBalance(debtor.getBalance()-value);
+            currentCreditor.setBalance(currentCreditor.getBalance()+value);
             personViewModel.update(debtor);
             mCheckboxesRecyclerView.findViewById(debtor.getId()).setBackgroundColor(getResources().getColor(R.color.white));
-            currentCreditor.setBalance(currentCreditor.getBalance()+value);
         }
         personViewModel.update(currentCreditor);
-        mCheckboxesRecyclerView.findViewById(currentCreditor.getId()).setBackgroundColor(getResources().getColor(R.color.white));
+        mRadioGroupRecyclerView.findViewById(currentCreditor.getId()).setBackgroundColor(getResources().getColor(R.color.white));
         currentCreditor = null;
+        currentDebtors = new ArrayList<>();
+        mDebtAmount.setText("0");
 
     }
 
