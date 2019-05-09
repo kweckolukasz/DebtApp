@@ -10,10 +10,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AddEditPerson extends AppCompatActivity {
+public class AddEditPersonActivity extends AppCompatActivity {
 
-    public static final String EXTRA_NAME = AddEditPerson.class.getPackage().getName()+"Extra_name";
-    public static final String EXTRA_ID = AddEditPerson.class.getPackage().getName()+"Extra_id";
+    public static final String EXTRA_NAME = AddEditPersonActivity.class.getPackage().getName()+"Extra_name";
+    public static final String EXTRA_ID = AddEditPersonActivity.class.getPackage().getName()+"Extra_id";
     private EditText mNameEditText;
 
     @Override

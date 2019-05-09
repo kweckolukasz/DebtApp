@@ -196,30 +196,14 @@
             app:layout_constraintTop_toBottomOf="@+id/button2" />
 
         <Button
-            android:id="@+id/button_add_new_person"
+            android:id="@+id/select_all_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:text="addNewPerson"
-            android:visibility="gone"
-            app:srcCompat="@android:drawable/ic_input_add"
-            tools:layout_editor_absoluteX="26dp"
-            tools:layout_editor_absoluteY="531dp" />
-
-        <Button
-            android:id="@+id/button_show_list_of_people"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
             android:layout_marginTop="8dp"
-            android:clickable="true"
-            android:text="listOfPersons"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_add_new_person"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            android:text="select All"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/debts_display_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

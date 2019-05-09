@@ -5,8 +5,8 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
+import Adapters.DebtResolveAdapter;
 import Room.Person;
-import ViewModel.DebtResolveAdapter;
 import ViewModel.PersonViewModel;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -15,14 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import supportClasses.DebtSet;
 
-public class DebtsResolve extends AppCompatActivity {
+public class MoneyFlowActivity extends AppCompatActivity {
 
     private PersonViewModel personViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_debts_resolve);
+        setContentView(R.layout.money_flow_recycer_view);
         RecyclerView mMoneyFlowRecyclerView = findViewById(R.id.resolve_debt_recyclerView);
         mMoneyFlowRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMoneyFlowRecyclerView.setHasFixedSize(true);

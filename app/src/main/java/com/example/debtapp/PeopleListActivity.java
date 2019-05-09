@@ -6,8 +6,8 @@ import android.util.Log;
 
 import java.util.List;
 
+import Adapters.PeopleListAdapter;
 import Room.Person;
-import ViewModel.PeopleListAdapter;
 import ViewModel.PersonViewModel;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,22 +16,22 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PeopleList extends AppCompatActivity implements PeopleListAdapter.OnPersonEditListener {
+public class PeopleListActivity extends AppCompatActivity implements PeopleListAdapter.OnPersonEditListener {
 
     private PersonViewModel personViewModel;
-    private static final String TAG = "PeopleList";
+    private static final String TAG = "PeopleListActivity";
     public static final int EDIT_NOTE_REQUEST = 2;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == EDIT_NOTE_REQUEST && resultCode == RESULT_OK) {
-            int id = data.getIntExtra(AddEditPerson.EXTRA_ID, -1);
-            if (id == -1){
+            int id = data.getIntExtra(AddEditPersonActivity.EXTRA_ID, -1);
+            if (id == -1) {
                 Log.d(TAG, "onActivityResult: person can't be edited, wrong id");
                 return;
             }
-            String name = data.getStringExtra(AddEditPerson.EXTRA_NAME);
+            String name = data.getStringExtra(AddEditPersonActivity.EXTRA_NAME);
 
             Person person = new Person(name);
             person.setId(id);
@@ -45,7 +45,7 @@ public class PeopleList extends AppCompatActivity implements PeopleListAdapter.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_people_list);
+        setContentView(R.layout.people_list_recycler_view);
         RecyclerView mPeopleListRecyclerView = findViewById(R.id.people_list_recycler_view);
         mPeopleListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mPeopleListRecyclerView.setHasFixedSize(true);
@@ -64,9 +64,9 @@ public class PeopleList extends AppCompatActivity implements PeopleListAdapter.O
         peopleListAdapter.setOnPersonEditListener(new PeopleListAdapter.OnPersonEditListener() {
             @Override
             public void onPersonEditClick(Person person) {
-                Intent intent = new Intent(PeopleList.this, AddEditPerson.class);
-                intent.putExtra(AddEditPerson.EXTRA_ID, person.getId());
-                intent.putExtra(AddEditPerson.EXTRA_NAME, person.getName());
+                Intent intent = new Intent(PeopleListActivity.this, AddEditPersonActivity.class);
+                intent.putExtra(AddEditPersonActivity.EXTRA_ID, person.getId());
+                intent.putExtra(AddEditPersonActivity.EXTRA_NAME, person.getName());
                 startActivityForResult(intent, EDIT_NOTE_REQUEST);
 
             }

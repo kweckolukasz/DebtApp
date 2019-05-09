@@ -1,4 +1,4 @@
-package ViewModel;
+package Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +33,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
     @Override
     public PersonListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.person_list_item, parent, false);
+                .inflate(R.layout.people_list_item, parent, false);
         return new PersonListHolder(itemView, onPersonEditListener);
     }
 
@@ -59,7 +59,6 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
 
         public PersonListHolder(@NonNull View itemView, OnPersonEditListener onPersonEditListener) {
             super(itemView);
-//            personTextView = itemView.findViewById(R.id.item_person_name);
             nameTextView = itemView.findViewById(R.id.person_list_cardview_textView_name);
             surNameTextView = itemView.findViewById(R.id.person_list_cardview_textView_surName);
             balanceTextView = itemView.findViewById(R.id.person_list_cardview_textView_balance);

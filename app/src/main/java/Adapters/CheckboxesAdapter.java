@@ -1,4 +1,4 @@
-package ViewModel;
+package Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +32,8 @@ public class CheckboxesAdapter extends RecyclerView.Adapter<CheckboxesAdapter.Pe
     @Override
     public PersonHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.person_item, parent, false);
+                .inflate(R.layout.main_people_item, parent, false);
+
         return new PersonHolder(itemView, onPeopleCheckboxesListener);
     }
 

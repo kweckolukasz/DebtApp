@@ -13,10 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DebtsResolve"></activity>
-        <activity android:name=".PeopleList" />
+        <activity android:name=".MoneyFlowActivity"></activity>
+        <activity android:name=".PeopleListActivity" />
         <activity
-            android:name=".AddEditPerson"
+            android:name=".AddEditPersonActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".HistoryActivity" />
         <activity

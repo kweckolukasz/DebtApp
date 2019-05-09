@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DebtsResolve">
+    tools:context=".PeopleListActivity">
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/resolve_debt_recyclerView"
+        android:id="@+id/people_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/resolve_debt_item"
-        >
+        tools:listitem="@layout/people_list_item">
 
     </androidx.recyclerview.widget.RecyclerView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

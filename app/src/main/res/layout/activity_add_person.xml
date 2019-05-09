@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddEditPerson"
+    tools:context=".AddEditPersonActivity"
     android:padding="16dp">
     <EditText
         android:id="@+id/edit_text_new_person_name"

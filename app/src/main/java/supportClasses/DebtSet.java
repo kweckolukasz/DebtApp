@@ -20,12 +20,16 @@ public class DebtSet implements Serializable {
         return creditor;
     }
 
-    public void setCreditor(String creditor) {
-        this.creditor = creditor;
-    }
-
     public Integer getValue() {
         return value;
+    }
+
+    public String getDebtor() {
+        return debtor;
+    }
+
+    public void setCreditor(String creditor) {
+        this.creditor = creditor;
     }
 
     public void setValue(Integer value) {
@@ -46,10 +50,6 @@ public class DebtSet implements Serializable {
 
     public void setPlace(String place) {
         this.place = place;
-    }
-
-    public String getDebtor() {
-        return debtor;
     }
 
     public void setDebtor(String debtor) {

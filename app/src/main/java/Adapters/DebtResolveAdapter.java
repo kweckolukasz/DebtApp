@@ -1,4 +1,4 @@
-package ViewModel;
+package Adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +25,7 @@ public class DebtResolveAdapter extends RecyclerView.Adapter<DebtResolveAdapter.
     public DebtHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder");
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.resolve_debt_item, parent, false);
+                .inflate(R.layout.money_flow_item, parent, false);
         return new DebtHolder(itemView);
     }
 
