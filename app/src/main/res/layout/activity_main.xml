@@ -13,205 +13,206 @@
     android:layout_marginEnd="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginBottom="8dp"
-    android:orientation="horizontal"
-    android:weightSum="10"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="1.0"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/radio_left"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="2" />
+    <TextView
+        android:id="@+id/creditor_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:shadowColor="#00ccff"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:text="choose creditor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:onClick="editCreditor"/>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="6">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/arrow"
+
+        <GridLayout
+            android:id="@+id/numeric_panel_grid_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/main_arrow_arrow"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/debt_amount" />
+            android:layout_alignParentRight="true">
+
+            <ImageButton
+                android:id="@+id/numeric_1_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_column="0"
+                app:srcCompat="@drawable/numeric_1"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_2_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_row="0"
+                android:layout_column="1"
+                app:srcCompat="@drawable/numeric_2"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_3_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_column="2"
+                app:srcCompat="@drawable/numeric_3"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_4_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="0"
+                app:srcCompat="@drawable/numeric_4"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_5_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="1"
+                app:srcCompat="@drawable/numeric_5"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_6_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="2"
+                app:srcCompat="@drawable/numeric_6"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_7_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_column="0"
+                app:srcCompat="@drawable/numeric_7"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_8_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_column="1"
+                app:srcCompat="@drawable/numeric_8"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_9_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_column="2"
+                app:srcCompat="@drawable/numeric_9"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_0_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_column="1"
+                app:srcCompat="@drawable/numeric_0"
+                android:onClick="calculate"/>
+
+            <ImageButton
+                android:id="@+id/numeric_backspace_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_column="0"
+                app:srcCompat="@drawable/backspace_outline" />
+
+            <ImageButton
+                android:id="@+id/numeric_submit_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_column="2"
+                android:onClick="submitDebt"
+                app:srcCompat="@drawable/check_all" />
+
+        </GridLayout>
 
         <EditText
             android:id="@+id/debt_desc"
-            android:layout_width="133dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:ems="10"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_toStartOf="@+id/numeric_panel_grid_layout"
+            android:layout_toLeftOf="@+id/numeric_panel_grid_layout"
+
+
             android:hint="@string/main_debt_desc_hint"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/arrow" />
+            android:inputType="textShortMessage" />
 
-        <EditText
+        <TextView
             android:id="@+id/debt_amount"
-            android:layout_width="134dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_below="@+id/debt_desc"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:ems="10"
-            android:hint="@string/main_debt_amount_hint"
-            android:inputType="numberDecimal"
+            android:layout_marginTop="16dp"
             android:text="0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add1" />
-
-        <ImageButton
-            android:id="@+id/add1"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="calculate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add10"
-            app:srcCompat="@android:drawable/ic_input_add" />
-
-        <ImageButton
-            android:id="@+id/add10"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="calculate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add100"
-            app:srcCompat="@android:drawable/ic_input_add" />
-
-        <ImageButton
-            android:id="@+id/add100"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="calculate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
 
-        <ImageButton
-            android:id="@+id/substract1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="calculate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/debt_desc"
-            app:srcCompat="@android:drawable/arrow_down_float" />
-
-        <ImageButton
-            android:id="@+id/substract10"
-            android:layout_width="75dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="calculate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/substract1"
-            app:srcCompat="@android:drawable/arrow_down_float" />
-
-        <ImageButton
-            android:id="@+id/substract100"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="calculate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/substract10"
-            app:srcCompat="@android:drawable/arrow_down_float" />
-
-        <Button
-            android:id="@+id/button2"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="submitDebt"
-            android:text="@string/accept_debt"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/substract100"
-            app:layout_constraintVertical_bias="0.037" />
+            android:layout_below="@+id/debt_amount"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="16dp">
 
-        <Button
-            android:id="@+id/debts_display_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="showDebts"
-            android:text="Show me debts"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button2" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:onClick="showDebts"
+                app:srcCompat="@drawable/format_list_bulleted_square" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/select_all_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="select All"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/debts_display_button" />
+    </RelativeLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/checkboxes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/select_all_button"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="2" />
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/account_multiple_check" />
 
 
 </LinearLayout>

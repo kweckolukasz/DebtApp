@@ -3,6 +3,7 @@ package Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.debtapp.R;
@@ -39,9 +40,15 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
 
     @Override
     public void onBindViewHolder(@NonNull PersonListHolder holder, int position) {
-        Person current = people.get(position);
+        final Person current = people.get(position);
         holder.nameTextView.setText(current.getName());
         holder.balanceTextView.setText(String.valueOf(current.getBalance()));
+        holder.deletePersonImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPersonEditListener.onDeletePersonButton(current);
+            }
+        });
     }
 
     @Override
@@ -56,12 +63,14 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
         private TextView nameTextView;
         private TextView surNameTextView;
         private TextView balanceTextView;
+        private ImageButton deletePersonImageButton;
 
         public PersonListHolder(@NonNull View itemView, OnPersonEditListener onPersonEditListener) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.person_list_cardview_textView_name);
             surNameTextView = itemView.findViewById(R.id.person_list_cardview_textView_surName);
             balanceTextView = itemView.findViewById(R.id.person_list_cardview_textView_balance);
+            deletePersonImageButton = itemView.findViewById(R.id.person_list_cardview_image_button_delete_person);
             this.onPersonEditListener = onPersonEditListener;
             itemView.setOnClickListener(this);
 
@@ -77,11 +86,9 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
 
     }
     public interface OnPersonEditListener {
-
         void onPersonEditClick(Person person);
+        void onDeletePersonButton(Person person);
     }
-    public void setOnPersonEditListener(OnPersonEditListener onPersonEditListener) {
-        this.onPersonEditListener = onPersonEditListener;
-    }
+
 }
 

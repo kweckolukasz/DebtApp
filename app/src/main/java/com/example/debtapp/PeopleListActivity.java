@@ -20,12 +20,12 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
 
     private PersonViewModel personViewModel;
     private static final String TAG = "PeopleListActivity";
-    public static final int EDIT_NOTE_REQUEST = 2;
+    public static final int EDIT_PERSON_REQUEST = 2;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == EDIT_NOTE_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == EDIT_PERSON_REQUEST && resultCode == RESULT_OK) {
             int id = data.getIntExtra(AddEditPersonActivity.EXTRA_ID, -1);
             if (id == -1) {
                 Log.d(TAG, "onActivityResult: person can't be edited, wrong id");
@@ -61,21 +61,21 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
             }
         });
 
-        peopleListAdapter.setOnPersonEditListener(new PeopleListAdapter.OnPersonEditListener() {
-            @Override
-            public void onPersonEditClick(Person person) {
-                Intent intent = new Intent(PeopleListActivity.this, AddEditPersonActivity.class);
-                intent.putExtra(AddEditPersonActivity.EXTRA_ID, person.getId());
-                intent.putExtra(AddEditPersonActivity.EXTRA_NAME, person.getName());
-                startActivityForResult(intent, EDIT_NOTE_REQUEST);
 
-            }
-        });
+
     }
 
 
     @Override
     public void onPersonEditClick(Person person) {
+        Intent intent = new Intent(PeopleListActivity.this, AddEditPersonActivity.class);
+        intent.putExtra(AddEditPersonActivity.EXTRA_ID, person.getId());
+        intent.putExtra(AddEditPersonActivity.EXTRA_NAME, person.getName());
+        startActivityForResult(intent, EDIT_PERSON_REQUEST);
+    }
 
+    @Override
+    public void onDeletePersonButton(Person person) {
+        personViewModel.delete(person);
     }
 }

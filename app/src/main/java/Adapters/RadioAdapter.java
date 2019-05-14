@@ -1,5 +1,6 @@
 package Adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.PersonHolder
 
     private List<Person> people = new ArrayList<>();
     private OnPersonRadioListener onPersonRadioListener;
+    public static final String TAG = RadioAdapter.class.getSimpleName();
 
     public RadioAdapter(OnPersonRadioListener onPersonRadioListener) {
         this.onPersonRadioListener = onPersonRadioListener;
@@ -68,6 +70,7 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.PersonHolder
             int position = getAdapterPosition();
             if (onPersonRadioListener != null && position != RecyclerView.NO_POSITION){
                 Person person = people.get(position);
+                Log.d(TAG, "setCreditor onClick: person: "+person.getName());
                 onPersonRadioListener.onPersonRadioClick(person);
 
             }

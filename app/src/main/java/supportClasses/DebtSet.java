@@ -9,6 +9,8 @@ public class DebtSet implements Serializable {
     private Integer value;
     private Date date;
     private String place;
+    private String description;
+    private boolean active = true;
 
     public DebtSet(String creditor, Integer value, String debtor) {
         this.creditor = creditor;
@@ -54,5 +56,21 @@ public class DebtSet implements Serializable {
 
     public void setDebtor(String debtor) {
         this.debtor = debtor;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

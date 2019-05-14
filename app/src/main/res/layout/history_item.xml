@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
@@ -18,34 +19,41 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/creditor"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
         <TextView
             android:id="@+id/amount_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/creditor_textView"
+            android:layout_toRightOf="@+id/creditor_textView"
             android:gravity="center_horizontal"
-            android:layout_toStartOf="@id/debtor_textView"
-            android:layout_toLeftOf="@id/debtor_textView"
-            android:layout_toEndOf="@id/creditor_textView"
-            android:layout_toRightOf="@id/creditor_textView"
             android:maxLines="1"
             android:text="120"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
         <TextView
             android:id="@+id/debtor_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/amount_textView"
+            android:layout_toRightOf="@+id/amount_textView"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="debtor"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        <ImageButton
+            android:id="@+id/delete_debt_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/debtor_textView"
+            android:layout_toRightOf="@+id/debtor_textView"
+            app:srcCompat="@drawable/ic_outline_delete_24px" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
