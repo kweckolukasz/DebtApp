@@ -8,6 +8,7 @@ import java.util.List;
 import Adapters.DebtResolveAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -23,6 +24,9 @@ public class MoneyFlowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.money_flow_recycer_view);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("money flow");
+        actionBar.setDisplayHomeAsUpEnabled(true);
         RecyclerView mMoneyFlowRecyclerView = findViewById(R.id.resolve_debt_recyclerView);
         mMoneyFlowRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMoneyFlowRecyclerView.setHasFixedSize(true);

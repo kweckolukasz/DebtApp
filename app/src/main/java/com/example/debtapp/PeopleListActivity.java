@@ -10,6 +10,7 @@ import Adapters.PeopleListAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -46,6 +47,9 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.people_list_recycler_view);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("people list");
         RecyclerView mPeopleListRecyclerView = findViewById(R.id.people_list_recycler_view);
         mPeopleListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mPeopleListRecyclerView.setHasFixedSize(true);

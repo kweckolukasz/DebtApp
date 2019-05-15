@@ -22,6 +22,7 @@ import Adapters.CheckboxesAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,7 +33,6 @@ import supportClasses.DebtSet;
 public class MainActivity extends AppCompatActivity implements CheckboxesAdapter.OnPeopleCheckboxesListener {
 
     Context context;
-
     TextView mDebtAmount;
     EditText mDescription;
     RecyclerView mCheckboxesRecyclerView;
@@ -56,8 +56,9 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("home");
         Log.d(TAG, "onCreate: start");
-
         context = getApplicationContext();
         mCheckboxesRecyclerView = findViewById(R.id.checkboxes);
         mDebtAmount = findViewById(R.id.debt_amount);
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         });
 
 
-        mCheckboxesRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mCheckboxesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mCheckboxesRecyclerView.setHasFixedSize(true);
 
 
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 setPeopleArraylist(people);
                 boolean isCreditorDeleted = true;
                 for (Person person : peopleArraylist){
-                    if (person.equals(currentCreditor)) isCreditorDeleted = false;
+                    if (currentCreditor != null && person.getName().equals(currentCreditor.getName())) isCreditorDeleted = false;
                 }
                 if (isCreditorDeleted) {
                     currentCreditor = null;
@@ -116,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 Log.d(TAG, "personViewModel -> observer -> onChanged");
             }
         });
-
 
     }//onCreate
 
@@ -169,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 Intent intent3 = new Intent(MainActivity.this, MoneyFlowActivity.class);
                 startActivity(intent3);
                 return true;
+            case R.id.show_history:
+                showDebts();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -295,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     }
 
 
-    public void showDebts(View view) {
+    public void showDebts() {
         //TODO zapisz global map do bundle i InstateState
         Intent intent = new Intent(this, HistoryActivity.class);
         Log.d(TAG, "showDebts: starting HistoryActivity");
@@ -311,39 +313,39 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     public void calculate(View view) {
         switch (view.getId()) {
             case R.id.numeric_1_image_button:
-                addNumeric(1);
+                updatemDebtTextView(1);
                 break;
             case R.id.numeric_2_image_button:
-                addNumeric(2);
+                updatemDebtTextView(2);
                 break;
             case R.id.numeric_3_image_button:
-                addNumeric(3);
+                updatemDebtTextView(3);
                 break;
             case R.id.numeric_4_image_button:
-                addNumeric(4);
+                updatemDebtTextView(4);
                 break;
             case R.id.numeric_5_image_button:
-                addNumeric(5);
+                updatemDebtTextView(5);
                 break;
             case R.id.numeric_6_image_button:
-                addNumeric(6);
+                updatemDebtTextView(6);
                 break;
             case R.id.numeric_7_image_button:
-                addNumeric(7);
+                updatemDebtTextView(7);
                 break;
             case R.id.numeric_8_image_button:
-                addNumeric(8);
+                updatemDebtTextView(8);
                 break;
             case R.id.numeric_9_image_button:
-                addNumeric(9);
+                updatemDebtTextView(9);
                 break;
             case R.id.numeric_0_image_button:
-                addNumeric(0);
+                updatemDebtTextView(0);
                 break;
         }
     }
 
-    private void addNumeric(Integer i) {
+    private void updatemDebtTextView(Integer i) {
         if (Integer.valueOf(mDebtAmount.getText().toString()) == 0)
             mDebtAmount.setText(i.toString());
         else {

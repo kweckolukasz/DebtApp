@@ -12,6 +12,7 @@ import java.util.List;
 import Adapters.RadioAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -33,6 +34,10 @@ public class ChooseCreditorActivity extends AppCompatActivity implements RadioAd
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("choose creditor");
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_close);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_choose_creditor);
         mRadioGroupRecyclerView = findViewById(R.id.radio_left);
 

@@ -7,29 +7,43 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginBottom="8dp"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:layout_gravity="center_horizontal">
 
-
-    <TextView
-        android:id="@+id/creditor_textView"
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:shadowColor="#00ccff"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
-        android:text="choose creditor"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:onClick="editCreditor"/>
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/creditor_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:shadowColor="#00ccff"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:elevation="5dp"
+                android:text="choose creditor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:onClick="editCreditor"
+                app:srcCompat="@drawable/account_convert"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
     <RelativeLayout
@@ -39,11 +53,24 @@
         android:orientation="vertical">
 
 
+        <TextView
+            android:id="@+id/debt_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="0"
+            android:textSize="48dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+
         <GridLayout
             android:id="@+id/numeric_panel_grid_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
+            android:layout_below="@id/debt_amount"
+            android:layout_centerHorizontal="true">
 
             <ImageButton
                 android:id="@+id/numeric_1_image_button"
@@ -51,17 +78,17 @@
                 android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_column="0"
-                app:srcCompat="@drawable/numeric_1"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_1" />
 
             <ImageButton
                 android:id="@+id/numeric_2_image_button"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_column="1"
-                app:srcCompat="@drawable/numeric_2"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_2" />
 
             <ImageButton
                 android:id="@+id/numeric_3_image_button"
@@ -69,8 +96,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_column="2"
-                app:srcCompat="@drawable/numeric_3"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_3" />
 
             <ImageButton
                 android:id="@+id/numeric_4_image_button"
@@ -78,8 +105,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="1"
                 android:layout_column="0"
-                app:srcCompat="@drawable/numeric_4"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_4" />
 
             <ImageButton
                 android:id="@+id/numeric_5_image_button"
@@ -87,8 +114,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="1"
                 android:layout_column="1"
-                app:srcCompat="@drawable/numeric_5"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_5" />
 
             <ImageButton
                 android:id="@+id/numeric_6_image_button"
@@ -96,8 +123,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="1"
                 android:layout_column="2"
-                app:srcCompat="@drawable/numeric_6"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_6" />
 
             <ImageButton
                 android:id="@+id/numeric_7_image_button"
@@ -105,8 +132,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="2"
                 android:layout_column="0"
-                app:srcCompat="@drawable/numeric_7"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_7" />
 
             <ImageButton
                 android:id="@+id/numeric_8_image_button"
@@ -114,8 +141,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="2"
                 android:layout_column="1"
-                app:srcCompat="@drawable/numeric_8"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_8" />
 
             <ImageButton
                 android:id="@+id/numeric_9_image_button"
@@ -123,8 +150,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="2"
                 android:layout_column="2"
-                app:srcCompat="@drawable/numeric_9"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_9" />
 
             <ImageButton
                 android:id="@+id/numeric_0_image_button"
@@ -132,8 +159,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="3"
                 android:layout_column="1"
-                app:srcCompat="@drawable/numeric_0"
-                android:onClick="calculate"/>
+                android:onClick="calculate"
+                app:srcCompat="@drawable/numeric_0" />
 
             <ImageButton
                 android:id="@+id/numeric_backspace_image_button"
@@ -158,55 +185,20 @@
             android:id="@+id/debt_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_toStartOf="@+id/numeric_panel_grid_layout"
-            android:layout_toLeftOf="@+id/numeric_panel_grid_layout"
-
-
+            android:layout_below="@id/numeric_panel_grid_layout"
             android:hint="@string/main_debt_desc_hint"
             android:inputType="textShortMessage" />
-
-        <TextView
-            android:id="@+id/debt_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/debt_desc"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
-            android:text="0"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/debt_amount"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="16dp">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:onClick="showDebts"
-                app:srcCompat="@drawable/format_list_bulleted_square" />
-        </LinearLayout>
-
     </RelativeLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_gravity="center_horizontal"
         android:id="@+id/checkboxes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"/>
 
     <ImageButton
         android:id="@+id/select_all_button"

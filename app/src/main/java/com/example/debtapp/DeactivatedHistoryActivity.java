@@ -10,6 +10,7 @@ import java.util.List;
 import Adapters.DebtAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -28,6 +29,9 @@ public class DeactivatedHistoryActivity extends AppCompatActivity implements Deb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deactivated_history_layout);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("deactivated history");
+        actionBar.setDisplayHomeAsUpEnabled(true);
         final RecyclerView recyclerView = findViewById(R.id.deactivated_history_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setHasFixedSize(true);

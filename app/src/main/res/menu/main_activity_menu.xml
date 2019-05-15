@@ -21,6 +21,10 @@
         android:id="@+id/resolve_all_debts_item"
         android:title="resolve all debts"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/show_history"
+        android:title="show history"
+        app:showAsAction="ifRoom"/>
 
 
 </menu>

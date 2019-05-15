@@ -3,8 +3,9 @@ package com.example.debtapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import java.util.List;
 import Adapters.DebtAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -25,31 +27,25 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
 
     private PersonViewModel personViewModel;
     private List<Person> peopleArrayList = new ArrayList<>();
-    private ImageButton showDeletedImageButton;
-    private boolean showActiveDebtSets = true;
     private static final String TAG = HistoryActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("history");
+        actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_history);
 
         final RecyclerView recyclerView = findViewById(R.id.history_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        showDeletedImageButton = findViewById(R.id.show_deleted_debts_image_button);
-        showDeletedImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_outline_delete_24px));
+
         final DebtAdapter adapter = new DebtAdapter(this);
         recyclerView.setAdapter(adapter);
-        showDeletedImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DeactivatedHistoryActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
 
 
@@ -94,7 +90,24 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
                     }
                 }
             }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.history_activity_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.show_deleted_debts:
+                Intent intent = new Intent(getApplicationContext(), DeactivatedHistoryActivity.class);
+                startActivity(intent);
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
