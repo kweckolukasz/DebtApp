@@ -2,6 +2,7 @@ package com.example.debtapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,8 +23,10 @@ import Adapters.CheckboxesAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("home");
+        actionBar.setTitle("");
         Log.d(TAG, "onCreate: start");
         context = getApplicationContext();
         mCheckboxesRecyclerView = findViewById(R.id.checkboxes);
@@ -87,7 +90,11 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             @Override
             public void onClick(View v) {
                 String debtAmountString = mDebtAmount.getText().toString();
-                mDebtAmount.setText(debtAmountString.substring(0, debtAmountString.length() - 1));
+                if (mDebtAmount.getText().toString().length()>1){
+                    mDebtAmount.setText(debtAmountString.substring(0, debtAmountString.length() - 1));
+                } else {
+                    mDebtAmount.setText("0");
+                }
             }
         });
 
@@ -120,20 +127,25 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
 
     }//onCreate
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onPersonCheckboxClick(Person person) {
         int id = person.getId();
         boolean currentDebtor = false;
+        CardView cardView = mCheckboxesRecyclerView.findViewById(id);
         for (Person debtor : currentDebtors) {
             if (person.equals(debtor)) currentDebtor = true;
         }
         if (!currentDebtor) {
             currentDebtors.add(person);
-            mCheckboxesRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.green));
+
+            cardView.setElevation(20);
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.green));
 
         } else {
             currentDebtors.remove(person);
-            mCheckboxesRecyclerView.findViewById(id).setBackgroundColor(getResources().getColor(R.color.white));
+            cardView.setElevation(6);
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
         }
     }
 

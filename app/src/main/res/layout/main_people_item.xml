@@ -3,21 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginLeft="4dp"
     android:layout_marginBottom="8dp"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    app:cardCornerRadius="6dp"
+    app:cardCornerRadius="1dp"
     app:cardElevation="6dp"
-    android:padding="8dp">
+    >
 
     <TextView
+        android:layout_gravity="center"
         android:id="@+id/item_person_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="24sp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingRight="18dp"
+        android:paddingLeft="18dp"
         />
 
 </androidx.cardview.widget.CardView>
