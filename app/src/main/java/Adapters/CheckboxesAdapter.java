@@ -45,13 +45,18 @@ public class CheckboxesAdapter extends RecyclerView.Adapter<CheckboxesAdapter.Pe
         holder.personName.setText(current.getName());
         holder.itemView.setId(current.getId());
         CardView cardView =(CardView) holder.itemView;
+        TextView currentValue = cardView.findViewById(R.id.item_person_value);
         if (current.isCurrentDebtor()){
             cardView.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.green));
+            currentValue.setVisibility(View.VISIBLE);
+            currentValue.setText(String.valueOf(current.getCurrentValue()));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 cardView.setElevation(20);
             }
         } else {
             cardView.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.white));
+            currentValue.setVisibility(View.INVISIBLE);
+            currentValue.setText("");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 cardView.setElevation(6);
             }
@@ -68,10 +73,12 @@ public class CheckboxesAdapter extends RecyclerView.Adapter<CheckboxesAdapter.Pe
 
         OnPeopleCheckboxesListener onPeopleCheckboxesListener;
         private TextView personName;
+        private TextView currentValue;
 
         public PersonHolder(@NonNull View itemView, OnPeopleCheckboxesListener onPersonListener) {
             super(itemView);
             personName = itemView.findViewById(R.id.item_person_name);
+            currentValue = itemView.findViewById(R.id.item_person_value);
             this.onPeopleCheckboxesListener = onPersonListener;
             itemView.setOnClickListener(this);
 

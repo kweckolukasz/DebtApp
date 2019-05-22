@@ -60,6 +60,8 @@
 
 
         <TextView
+            android:singleLine="true"
+            android:ellipsize="end"
             android:id="@+id/debt_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

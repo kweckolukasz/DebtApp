@@ -73,10 +73,12 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             public void onClick(View v) {
                 String debtAmountString = mDebtAmount.getText().toString();
                 if (mDebtAmount.getText().toString().length() > 1) {
-                    mDebtAmount.setText(debtAmountString.substring(0, debtAmountString.length() - 1));
+                    String changed = debtAmountString.substring(0, debtAmountString.length() - 1);
+                    mDebtAmount.setText(changed);
                 } else {
                     mDebtAmount.setText("0");
                 }
+                updateCurrentValueOnDebtors();
             }
         });
 
@@ -102,15 +104,35 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
 
     }//onCreate
 
+    private void updateCurrentValueOnDebtors() {
+        ArrayList<Person> debtors = new ArrayList<>();
+        for (Person person : peopleArraylist) {
+            if (person.isCurrentDebtor()) debtors.add(person);
+        }
+        int currentValue = Integer.valueOf(mDebtAmount.getText().toString());
+        if (currentValue != 0 && debtors.size() != 0) {
+            if (debtors.size() != 1){
+                if (currentValue % 2 == 0) currentValue = currentValue/debtors.size();
+                else currentValue = currentValue/debtors.size()+1;
+            }
+        } else currentValue = 0;
+        for (Person debtor : debtors) {
+            debtor.setCurrentValue(currentValue);
+            personViewModel.update(debtor);
+        }
+    }
+
 
     @Override
     public void onPersonCheckboxClick(Person person) {
         if (person.isCurrentDebtor()) {
             person.setCurrentDebtor(false);
             personViewModel.update(person);
+            updateCurrentValueOnDebtors();
         } else {
             person.setCurrentDebtor(true);
             personViewModel.update(person);
+            updateCurrentValueOnDebtors();
         }
     }
 
@@ -177,15 +199,29 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         }
 
         for (Person debtor : currentDebtors) {
-            DebtSet debtSet = new DebtSet(currentCreditor.getName(), value, debtor.getName());
-            if (mDescription.getText() != null)
-                debtSet.setDescription(mDescription.getText().toString());
-            debtSet.setDate(Calendar.getInstance().getTime());
-            currentCreditor.addDebt(debtSet);
-            debtor.setBalance(debtor.getBalance() - value);
-            currentCreditor.setBalance(currentCreditor.getBalance() + value);
-            debtor.setCurrentDebtor(false);
-            personViewModel.update(debtor);
+            if (currentDebtors.size() > 1) {
+                Integer splitedValue = value / currentDebtors.size() + 1;
+                DebtSet debtSet = new DebtSet(currentCreditor.getName(), splitedValue, debtor.getName());
+                if (mDescription.getText() != null)
+                    debtSet.setDescription(mDescription.getText().toString());
+                debtSet.setDate(Calendar.getInstance().getTime());
+                currentCreditor.addDebt(debtSet);
+                debtor.setBalance(debtor.getBalance() - splitedValue);
+                currentCreditor.setBalance(currentCreditor.getBalance() + splitedValue);
+                debtor.setCurrentDebtor(false);
+                personViewModel.update(debtor);
+            }
+            if (currentDebtors.size() == 1) {
+                DebtSet debtSet = new DebtSet(currentCreditor.getName(), value, debtor.getName());
+                if (mDescription.getText() != null)
+                    debtSet.setDescription(mDescription.getText().toString());
+                debtSet.setDate(Calendar.getInstance().getTime());
+                currentCreditor.addDebt(debtSet);
+                debtor.setBalance(debtor.getBalance() - value);
+                currentCreditor.setBalance(currentCreditor.getBalance() + value);
+                debtor.setCurrentDebtor(false);
+                personViewModel.update(debtor);
+            }
         }
         personViewModel.update(currentCreditor);
         mDebtAmount.setText("0");
@@ -204,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
 
     private void createMoneyFlows_1stStep() {
         for (Person person : peopleArraylist) {
-            Log.d(TAG, "createMoneyFlows_1stStep: amount of debtSet: "+person.getDebtSets().size());
+            Log.d(TAG, "createMoneyFlows_1stStep: amount of debtSet: " + person.getDebtSets().size());
             if (person.getBalance() == 0) {
                 person.setBalanced(true);
                 continue;
@@ -249,12 +285,12 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             }
         }
         if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) > 0) {
-            debtor.addMoneyFlow(creditor.getName(), debtor.getBalance()*(-1), debtor.getName());
+            debtor.addMoneyFlow(creditor.getName(), debtor.getBalance() * (-1), debtor.getName());
             Log.d(TAG, "createMoneyFlows_2ndStep: creditor>debtor");
             debtor.setBalanced(true);
             debtorIndex--;
             createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
-        }else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))==0){
+        } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) == 0) {
             debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
             Log.d(TAG, "createMoneyFlows_2ndStep: creditor = debtor");
             debtor.setBalanced(true);
@@ -373,12 +409,17 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         if (Integer.valueOf(mDebtAmount.getText().toString()) == 0)
             mDebtAmount.setText(i.toString());
         else {
+            if (mDebtAmount.getText().length() == 8) {
+                Toast.makeText(context, "nie masz tyle kasy nawet ;)", Toast.LENGTH_SHORT).show();
+                return;
+            }
             StringBuilder sb = new StringBuilder();
             String debtAmountString = mDebtAmount.getText().toString();
             sb.append(debtAmountString);
             sb.append(String.valueOf(i));
             mDebtAmount.setText(sb.toString());
         }
+        updateCurrentValueOnDebtors();
     }
 
 

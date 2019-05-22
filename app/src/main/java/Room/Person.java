@@ -46,6 +46,8 @@ public class Person implements Serializable, Comparable<Person> {
 
     private boolean balanced;
 
+    private int currentValue;
+
     @TypeConverters(supportClasses.TypeConverters.class)
     private ArrayList<DebtSet> debtSets;
 
@@ -138,5 +140,13 @@ public class Person implements Serializable, Comparable<Person> {
 
     public void setCurrentDebtor(boolean currentDebtor) {
         this.currentDebtor = currentDebtor;
+    }
+
+    public int getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(int currentValue) {
+        this.currentValue = currentValue;
     }
 }

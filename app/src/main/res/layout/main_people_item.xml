@@ -11,18 +11,32 @@
     app:cardCornerRadius="1dp"
     app:cardElevation="6dp">
 
-    <TextView
-        android:id="@+id/item_person_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:ellipsize="marquee"
-        android:paddingLeft="18dp"
-        android:paddingTop="8dp"
-        android:paddingRight="18dp"
-        android:paddingBottom="8dp"
-        android:singleLine="true"
-        android:textColor="@color/black"
-        android:textSize="24sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/item_person_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"
+            android:ellipsize="marquee"
+            android:paddingLeft="18dp"
+            android:paddingTop="8dp"
+            android:paddingRight="18dp"
+            android:paddingBottom="8dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/item_person_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/red"
+            />
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
