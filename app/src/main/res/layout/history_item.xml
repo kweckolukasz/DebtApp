@@ -8,52 +8,85 @@
     android:layout_marginEnd="8dp"
     android:layout_marginRight="8dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:background="@drawable/ic_trending_flat_black_24dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/creditor_textView"
-            android:layout_width="wrap_content"
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/creditor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-        <TextView
-            android:id="@+id/amount_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/creditor_textView"
-            android:layout_toRightOf="@+id/creditor_textView"
-            android:gravity="center_horizontal"
-            android:maxLines="1"
-            android:text="120"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-        <TextView
-            android:id="@+id/debtor_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/amount_textView"
-            android:layout_toRightOf="@+id/amount_textView"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="debtor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-        <ImageButton
-            android:id="@+id/delete_debt_image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/debtor_textView"
-            android:layout_toRightOf="@+id/debtor_textView"
-            app:srcCompat="@drawable/ic_outline_delete_24px" />
-    </RelativeLayout>
+            android:layout_gravity="center_vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/creditor_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/creditor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+
+            <TextView
+                android:id="@+id/amount_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:maxLines="1"
+                android:text="120"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <TextView
+                android:id="@+id/debtor_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="debtor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/delete_debt_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/ic_outline_delete_24px" />
+
+            <TextView
+                android:id="@+id/history_item_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/history_item_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:text="yolo"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                 />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

@@ -14,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import Adapters.CheckboxesAdapter;
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 DebtSet debtSet = new DebtSet(currentCreditor.getName(), splitedValue, debtor.getName());
                 if (mDescription.getText() != null)
                     debtSet.setDescription(mDescription.getText().toString());
-                debtSet.setDate(Calendar.getInstance().getTime());
+                debtSet.setDate(new Date());
                 currentCreditor.addDebt(debtSet);
                 debtor.setBalance(debtor.getBalance() - splitedValue);
                 currentCreditor.setBalance(currentCreditor.getBalance() + splitedValue);
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 DebtSet debtSet = new DebtSet(currentCreditor.getName(), value, debtor.getName());
                 if (mDescription.getText() != null)
                     debtSet.setDescription(mDescription.getText().toString());
-                debtSet.setDate(Calendar.getInstance().getTime());
+                debtSet.setDate(new Date());
                 currentCreditor.addDebt(debtSet);
                 debtor.setBalance(debtor.getBalance() - value);
                 currentCreditor.setBalance(currentCreditor.getBalance() + value);
@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         }
         personViewModel.update(currentCreditor);
         mDebtAmount.setText("0");
+        mDescription.setText("");
 
     }
 

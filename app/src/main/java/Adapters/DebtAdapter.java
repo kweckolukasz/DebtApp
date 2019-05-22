@@ -9,7 +9,11 @@ import android.widget.TextView;
 
 import com.example.debtapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,24 +43,50 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
     public void onBindViewHolder(@NonNull DebtHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder");
 
-            final DebtSet current = allDebts.get(position);
-            holder.mCreditorTextView.setText(current.getCreditor()+" pożyczył ");
-            holder.mAmountTextView.setText(String.valueOf(current.getValue())+" zł ");
-            holder.mDebtorTextView.setText(current.getDebtor()+"owi");
-            holder.mDeleteDebtImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "onClick: imageButton, debtSet: "+current.toString()+" date: "+current.getDate());
-                    onDebtItemListener.onDeleteDebtClicked(current);
-                }
-            });
+        final DebtSet current = allDebts.get(position);
+        holder.mCreditorTextView.setText(current.getCreditor());
+        holder.mAmountTextView.setText(String.valueOf(current.getValue()));
+        holder.mDebtorTextView.setText(current.getDebtor());
+        holder.mDeleteDebtImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: imageButton, debtSet: " + current.toString() + " date: " + current.getDate());
+                onDebtItemListener.onDeleteDebtClicked(current);
+            }
+        });
+
+        if (current.getDescription() != null) holder.mDescription.setText(current.getDescription());
+
+        String dateDesc;
+        Calendar date = Calendar.getInstance();
+        date.setTime(current.getDate());
+        long debtDate = current.getDate().getTime();
+        long now = new Date().getTime();
+        long diff = now - debtDate;
+        int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+        switch (days) {
+            case 0:
+                dateDesc = "dziś";
+                break;
+            case 1:
+                dateDesc = "wczoraj";
+                break;
+            case 2:
+                dateDesc = "przedwczoraj";
+                break;
+            default:
+                dateDesc = sdf.format(debtDate);
+
+        }
+        holder.mDate.setText(sdf.format(current.getDate()));
 
 
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount"+allDebts.size());
+        Log.d(TAG, "getItemCount" + allDebts.size());
         return allDebts.size();
     }
 
@@ -72,6 +102,8 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
         private TextView mAmountTextView;
         private TextView mDebtorTextView;
         private ImageButton mDeleteDebtImageButton;
+        private TextView mDescription;
+        private TextView mDate;
 
         public DebtHolder(@NonNull View itemView, OnDebtItemListener onDebtItemListener) {
             super(itemView);
@@ -80,6 +112,8 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
             mAmountTextView = itemView.findViewById(R.id.amount_textView);
             mDebtorTextView = itemView.findViewById(R.id.debtor_textView);
             mDeleteDebtImageButton = itemView.findViewById(R.id.delete_debt_image_button);
+            mDescription = itemView.findViewById(R.id.history_item_desc);
+            mDate = itemView.findViewById(R.id.history_item_date);
             this.onDebtItemListener = onDebtItemListener;
         }
 
