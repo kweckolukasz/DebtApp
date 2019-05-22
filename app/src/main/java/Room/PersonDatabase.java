@@ -10,7 +10,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = Person.class, version = 8, exportSchema = false)
+@Database(entities = Person.class, version = 10, exportSchema = false)
 public abstract class PersonDatabase extends RoomDatabase {
 
     private static String TAG = PersonDatabase.class.getSimpleName();

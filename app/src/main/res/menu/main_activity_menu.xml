@@ -3,24 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/show_list_of_persons_item"
+        android:icon="@drawable/account_group"
         android:title="osoby"
-        app:showAsAction="always"
-        android:icon="@drawable/account_group" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/add_new_person_item"
         android:icon="@drawable/account_plus"
-        app:showAsAction="always"
-        android:title="dodaj osobę" />
+        android:title="dodaj osobę"
+        app:showAsAction="always" />
     <item
         android:id="@+id/show_history"
-        android:title="historia"
         android:icon="@drawable/book_open_variant"
-        app:showAsAction="always"/>
+        android:title="historia"
+        app:showAsAction="always" />
     <item
         android:id="@+id/resolve_all_debts_item"
-        android:title="rozliczenie"
         android:icon="@drawable/cash"
-        app:showAsAction="always"/>
+        android:title="rozliczenie"
+        app:showAsAction="always" />
     <item
         android:id="@+id/clear_all_debts_and_data"
         android:title="clear all persons"

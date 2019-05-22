@@ -6,9 +6,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 import Adapters.DebtAdapter;
@@ -48,9 +49,6 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
         recyclerView.setAdapter(adapter);
 
 
-
-
-
         personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
         personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
 
@@ -69,7 +67,7 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
                     }
                 }
                 Log.d(TAG, "onChanged: sending debts to adapter: size: " + debtSets.size());
-
+                Collections.sort(debtSets);
                 adapter.setDebtSets(debtSets);
             }
         });
@@ -77,20 +75,33 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
     }
 
     @Override
-    public void onDeleteDebtClicked(DebtSet debtSet) {
-        Log.d(TAG, "onDeleteDebtClicked debtSet: "+debtSet.toString()+" date: "+debtSet.getDate());
-            Iterator<Person> iterator = peopleArrayList.iterator();
-            for (Person person: peopleArrayList){
-                if (!person.getDebtSets().isEmpty()){
-                    for(DebtSet debtSet1:person.getDebtSets()){
-                        if (debtSet1 == debtSet){
-                            Log.d(TAG, "onDeleteDebtClicked: debtFromIterator: "+debtSet1+" from interface: "+debtSet.toString());
-                            debtSet1.setActive(false);
-                            personViewModel.update(iterator.next());
+    public void onDeleteDebtClicked(DebtSet debtSetClicked) {
+        Log.d(TAG, "onDeleteDebtClicked debtSetClicked: " + debtSetClicked.toString() + " date: " + debtSetClicked.getDate());
+        for (Person creditor : peopleArrayList) {
+            for (DebtSet debtSetFromArray : creditor.getDebtSets()) {
+                if (debtSetFromArray == debtSetClicked) {
+                    Log.d(TAG, "onDeleteDebtClicked: debtSetFromArray = debtSetClicked");
+                    String debtorName = debtSetFromArray.getDebtor();
+                    Person debtor = null;
+                    for (Person debtorPe : peopleArrayList) {
+                        if (debtorPe.getName().equals(debtorName)) {
+                            debtor = debtorPe;
                         }
                     }
+                    if (debtor==null) {
+                        Toast.makeText(this, "debtor=null!!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Integer creditorBalance = creditor.getBalance();
+                    Integer debtorBalance = debtor.getBalance();
+                    creditor.setBalance(creditorBalance - debtSetFromArray.getValue());
+                    debtor.setBalance(debtorBalance + debtSetFromArray.getValue());
+                    debtSetFromArray.setActive(false);
+                    personViewModel.update(creditor);
+                    personViewModel.update(debtor);
                 }
             }
+        }
     }
 
     @Override

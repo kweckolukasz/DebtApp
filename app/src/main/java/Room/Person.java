@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -18,6 +19,14 @@ import supportClasses.DebtSet;
 
 @Entity(tableName = "person_table")
 public class Person implements Serializable, Comparable<Person> {
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj.getClass().isInstance(Person.class)){
+            Person person = (Person) obj;
+            if (this.getId() == person.getId()) return true;
+        }
+        return false;
+    }
 
     @Ignore
     public String TAG = Person.class.getSimpleName();
@@ -31,7 +40,9 @@ public class Person implements Serializable, Comparable<Person> {
 
     private Integer balance = 0;
 
-    private boolean CurrentCreditor = false;
+    private boolean currentCreditor = false;
+
+    private boolean currentDebtor = false;
 
     private boolean balanced;
 
@@ -114,10 +125,18 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     public boolean isCurrentCreditor() {
-        return CurrentCreditor;
+        return currentCreditor;
     }
 
     public void setCurrentCreditor(boolean currentCreditor) {
-        CurrentCreditor = currentCreditor;
+        this.currentCreditor = currentCreditor;
+    }
+
+    public boolean isCurrentDebtor() {
+        return currentDebtor;
+    }
+
+    public void setCurrentDebtor(boolean currentDebtor) {
+        this.currentDebtor = currentDebtor;
     }
 }

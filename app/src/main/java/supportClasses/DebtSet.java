@@ -3,7 +3,7 @@ package supportClasses;
 import java.io.Serializable;
 import java.util.Date;
 
-public class DebtSet implements Serializable {
+public class DebtSet implements Serializable, Comparable<DebtSet> {
     private String debtor;
     private String creditor;
     private Integer value;
@@ -72,5 +72,11 @@ public class DebtSet implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public int compareTo(DebtSet o) {
+        //return o.getDate().compareTo(this.date);
+        return this.date.compareTo(o.getDate());
     }
 }

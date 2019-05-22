@@ -1,5 +1,6 @@
 package Adapters;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import Room.Person;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CheckboxesAdapter extends RecyclerView.Adapter<CheckboxesAdapter.PersonHolder> {
@@ -42,6 +44,18 @@ public class CheckboxesAdapter extends RecyclerView.Adapter<CheckboxesAdapter.Pe
         Person current = people.get(position);
         holder.personName.setText(current.getName());
         holder.itemView.setId(current.getId());
+        CardView cardView =(CardView) holder.itemView;
+        if (current.isCurrentDebtor()){
+            cardView.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.green));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                cardView.setElevation(20);
+            }
+        } else {
+            cardView.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.white));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                cardView.setElevation(6);
+            }
+        }
     }
 
     @Override

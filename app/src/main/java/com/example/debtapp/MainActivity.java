@@ -2,7 +2,6 @@ package com.example.debtapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,10 +22,8 @@ import Adapters.CheckboxesAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -42,17 +39,13 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     ImageButton mSelectAllButton;
     ImageButton mNumericBackspaceImageButton;
     TextView mCreditorTextView;
-    Person currentCreditor;
 
     List<Person> peopleArraylist = new ArrayList<>();
-
-    ArrayList<Person> currentDebtors = new ArrayList<>();
 
     private PersonViewModel personViewModel;
     public static final int ADD_PERSON_REQUEST = 1;
     public static final int EDIT_CREDITOR_REQUEST = 2;
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final String TAGC = "setCurrentCreditor";
     public static final String DEBT_MAIN_PEOPLE_LIST_MAIN_ACTIVITY = MainActivity.class.getSimpleName() + "global_people_list";
 
     @Override
@@ -69,18 +62,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         mSelectAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Person person : peopleArraylist) {
-                    boolean isCurrentDebtor = false;
-                    for (Person debtor : currentDebtors) {
-                        if (person.equals(debtor)) {
-                            isCurrentDebtor = true;
-                        }
-                    }
-                    if (!isCurrentDebtor) {
-                        currentDebtors.add(person);
-                        mCheckboxesRecyclerView.findViewById(person.getId()).setBackgroundColor(getResources().getColor(R.color.green));
-                    }
-                }
+
             }
         });
         mDescription = findViewById(R.id.debt_desc);
@@ -90,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             @Override
             public void onClick(View v) {
                 String debtAmountString = mDebtAmount.getText().toString();
-                if (mDebtAmount.getText().toString().length()>1){
+                if (mDebtAmount.getText().toString().length() > 1) {
                     mDebtAmount.setText(debtAmountString.substring(0, debtAmountString.length() - 1));
                 } else {
                     mDebtAmount.setText("0");
@@ -113,39 +95,22 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             public void onChanged(@Nullable List<Person> people) {
                 checkboxesAdapter.setPeople(people);
                 setPeopleArraylist(people);
-                boolean isCreditorDeleted = true;
-                for (Person person : peopleArraylist){
-                    if (currentCreditor != null && person.getName().equals(currentCreditor.getName())) isCreditorDeleted = false;
-                }
-                if (isCreditorDeleted) {
-                    currentCreditor = null;
-                    mCreditorTextView.setText("no creditor");
-                }
                 Log.d(TAG, "personViewModel -> observer -> onChanged");
+                checkPeopleOnCreditor();
             }
         });
 
     }//onCreate
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     @Override
     public void onPersonCheckboxClick(Person person) {
-        int id = person.getId();
-        boolean currentDebtor = false;
-        CardView cardView = mCheckboxesRecyclerView.findViewById(id);
-        for (Person debtor : currentDebtors) {
-            if (person.equals(debtor)) currentDebtor = true;
-        }
-        if (!currentDebtor) {
-            currentDebtors.add(person);
-
-            cardView.setElevation(20);
-            cardView.setCardBackgroundColor(getResources().getColor(R.color.green));
-
+        if (person.isCurrentDebtor()) {
+            person.setCurrentDebtor(false);
+            personViewModel.update(person);
         } else {
-            currentDebtors.remove(person);
-            cardView.setElevation(6);
-            cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+            person.setCurrentDebtor(true);
+            personViewModel.update(person);
         }
     }
 
@@ -168,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 startActivityForResult(intent, ADD_PERSON_REQUEST);
                 return true;
             case R.id.show_list_of_persons_item:
-                currentDebtors = new ArrayList<>();
                 Intent intent2 = new Intent(MainActivity.this, PeopleListActivity.class);
                 startActivity(intent2);
                 return true;
@@ -176,47 +140,133 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 clearAlldebtsAndData();
                 return true;
             case R.id.resolve_all_debts_item:
+                if (peopleArraylist.size() == 0) {
+                    Toast.makeText(context, "nie ma długów do rozliczenia", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 Collections.sort(peopleArraylist);
                 createMoneyFlows(0, peopleArraylist.size() - 1);
                 Intent intent3 = new Intent(MainActivity.this, MoneyFlowActivity.class);
                 startActivity(intent3);
                 return true;
             case R.id.show_history:
-                showDebts();
+                Intent intent4 = new Intent(this, HistoryActivity.class);
+                startActivity(intent4);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    public void submitDebt(View view) {
+        Integer value = Integer.valueOf(mDebtAmount.getText().toString());
+        if (value <= 0) {
+            Toast.makeText(this, "debt can't be 0 or less", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Person currentCreditor = null;
+        ArrayList<Person> currentDebtors = new ArrayList<>();
+        for (Person person : peopleArraylist) {
+            if (person.isCurrentCreditor()) currentCreditor = person;
+            if (person.isCurrentDebtor()) currentDebtors.add(person);
+        }
+
+        if (currentCreditor == null || currentDebtors.isEmpty()) {
+            Toast.makeText(this, "have to choose at least one creditor and one debtor", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        for (Person debtor : currentDebtors) {
+            DebtSet debtSet = new DebtSet(currentCreditor.getName(), value, debtor.getName());
+            if (mDescription.getText() != null)
+                debtSet.setDescription(mDescription.getText().toString());
+            debtSet.setDate(Calendar.getInstance().getTime());
+            currentCreditor.addDebt(debtSet);
+            debtor.setBalance(debtor.getBalance() - value);
+            currentCreditor.setBalance(currentCreditor.getBalance() + value);
+            debtor.setCurrentDebtor(false);
+            personViewModel.update(debtor);
+        }
+        personViewModel.update(currentCreditor);
+        mDebtAmount.setText("0");
+
+    }
+
     private void createMoneyFlows(int creditorIndex, int debtorIndex) {
+        for (Person person : peopleArraylist) {
+            person.setBalanced(false);
+            person.setMoneyFlow(new ArrayList<DebtSet>());
+            personViewModel.update(person);
+        }
+        createMoneyFlows_1stStep();
+        createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
+    }
+
+    private void createMoneyFlows_1stStep() {
+        for (Person person : peopleArraylist) {
+            Log.d(TAG, "createMoneyFlows_1stStep: amount of debtSet: "+person.getDebtSets().size());
+            if (person.getBalance() == 0) {
+                person.setBalanced(true);
+                continue;
+            }
+            Log.d(TAG, "createMoneyFlows: personBalance " + person.getBalance());
+            Person creditor = person;
+            Integer creditorBalance = person.getBalance();
+            for (int i = peopleArraylist.size() - 1; i == 0; i--) {
+                Person debtor = peopleArraylist.get(i);
+                Integer debtorBalance = debtor.getBalance();
+                if (debtor.getBalance().compareTo(0) < 0) {
+                    if (creditorBalance.compareTo(Math.abs(debtorBalance)) == 0) {
+                        creditor.setBalanced(true);
+                        debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
+                        debtor.setBalanced(true);
+                        personViewModel.update(creditor);
+                        personViewModel.update(debtor);
+                    }
+                }
+            }
+        }
+    }
+
+    private void createMoneyFlows_2ndStep(int creditorIndex, int debtorIndex) {
+        Collections.sort(peopleArraylist);
         Person creditor = peopleArraylist.get(creditorIndex);
         Person debtor = peopleArraylist.get(debtorIndex);
-        //TODO do optymalizacji: metoda powinna wyszukiwać takich połączeń w których zachodzi equals, eliminować, po tym robić poniższe
-        if (!debtor.isBalanced()) {
-            if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) > 0) {
-                debtor.addMoneyFlow(creditor.getName(), debtor.getBalance(), debtor.getName());
-                creditor.setBalance(creditor.getBalance() + debtor.getBalance());
-//                debtor.setBalance(0);
-                debtor.setBalanced(true);
-                debtorIndex--;
-                createMoneyFlows(creditorIndex, debtorIndex);
-            } else if (creditor.getBalance().equals(Math.abs(debtor.getBalance()))) {
-                creditor.setBalance(0);
-                creditor.setBalanced(true);
-                creditorIndex++;
-                debtor.addMoneyFlow(creditor.getName(), debtor.getBalance(), debtor.getName());
-//                debtor.setBalance(0);
-                debtor.setBalanced(true);
-                debtorIndex--;
-                createMoneyFlows(creditorIndex, debtorIndex);
-            } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) < 0) {
-                debtor.setBalance(debtor.getBalance() + creditor.getBalance());
-                debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
-                creditor.setBalanced(true);
-//                creditor.setBalance(0);
-                creditorIndex++;
-                createMoneyFlows(creditorIndex, debtorIndex);
+        if (creditor.isBalanced()) {
+            for (int i = creditorIndex + 1; i < peopleArraylist.size(); i++) {
+                if (peopleArraylist.get(i).getBalance().compareTo(0) <= 0) return;
+                if (!peopleArraylist.get(i).isBalanced()) {
+                    createMoneyFlows_2ndStep(i, debtorIndex);
+                }
             }
+        }
+        if (debtor.isBalanced()) {
+            for (int i = debtorIndex - 1; i >= 0; i--) {
+                if (peopleArraylist.get(i).getBalance().compareTo(0) >= 0) return;
+                if (!peopleArraylist.get(i).isBalanced()) {
+                    createMoneyFlows_2ndStep(creditorIndex, i);
+                }
+            }
+        }
+        if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) > 0) {
+            debtor.addMoneyFlow(creditor.getName(), debtor.getBalance()*(-1), debtor.getName());
+            Log.d(TAG, "createMoneyFlows_2ndStep: creditor>debtor");
+            debtor.setBalanced(true);
+            debtorIndex--;
+            createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
+        }else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance()))==0){
+            debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
+            Log.d(TAG, "createMoneyFlows_2ndStep: creditor = debtor");
+            debtor.setBalanced(true);
+            debtorIndex--;
+            creditorIndex++;
+            createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
+        } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) < 0) {
+            debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
+            Log.d(TAG, "createMoneyFlows_2ndStep: creditor < debtor");
+            creditor.setBalanced(true);
+            creditorIndex++;
+            createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
         }
         personViewModel.update(creditor);
         personViewModel.update(debtor);
@@ -233,36 +283,13 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     }
 
 
-    public void submitDebt(View view) {
-        Integer value = Integer.valueOf(mDebtAmount.getText().toString());
-        if (value <= 0) {
-            Toast.makeText(this, "debt can't be 0 or less", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (currentCreditor == null || currentDebtors.isEmpty()) {
-            Toast.makeText(this, "have to choose at least one creditor and one debtor", Toast.LENGTH_LONG).show();
-            return;
-        }
-        for (Person debtor : currentDebtors) {
-            DebtSet debtSet = new DebtSet(currentCreditor.getName(), value, debtor.getName());
-            if (mDescription.getText() != null)
-                debtSet.setDescription(mDescription.getText().toString());
-            debtSet.setDate(Calendar.getInstance().getTime());
-            currentCreditor.addDebt(debtSet);
-            debtor.setBalance(debtor.getBalance() - value);
-            currentCreditor.setBalance(currentCreditor.getBalance() + value);
-            personViewModel.update(debtor);
-            mCheckboxesRecyclerView.findViewById(debtor.getId()).setBackgroundColor(getResources().getColor(R.color.white));
-        }
-        personViewModel.update(currentCreditor);
-        currentDebtors = new ArrayList<>();
-        mDebtAmount.setText("0");
-
-    }
-
     public void editCreditor(View view) {
-        Log.d(TAGC, "editCreditor: ");
-        currentCreditor = null;
+        Log.d(TAG, "editCreditor: ");
+        for (Person person : peopleArraylist) {
+            if (person.isCurrentCreditor()) person.setCurrentCreditor(false);
+            personViewModel.update(person);
+        }
+
         Intent intent = new Intent(getApplicationContext(), ChooseCreditorActivity.class);
         startActivityForResult(intent, EDIT_CREDITOR_REQUEST);
     }
@@ -294,10 +321,9 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 Log.d(TAG, "setCreditor onActivityResult: EDIT_CREDITOR_REQUEST, name: " + name);
                 for (Person person : peopleArraylist) {
                     if (person.getName().equals(name)) {
-                        Log.d(TAG, "setCreditor onActivityResult: SET_CREDITOR: "+person.getName());
-                        currentCreditor = person;
-                        mCreditorTextView.setText(name);
-                        return;
+                        Log.d(TAG, "setCreditor onActivityResult: SET_CREDITOR: " + person.getName());
+                        person.setCurrentCreditor(true);
+                        personViewModel.update(person);
                     }
 
 
@@ -307,20 +333,6 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         }
 
     }
-
-
-    public void showDebts() {
-        //TODO zapisz global map do bundle i InstateState
-        Intent intent = new Intent(this, HistoryActivity.class);
-        Log.d(TAG, "showDebts: starting HistoryActivity");
-        startActivity(intent);
-    }
-
-
-    public void setPeopleArraylist(List<Person> peopleArraylist) {
-        this.peopleArraylist = peopleArraylist;
-    }
-
 
     public void calculate(View view) {
         switch (view.getId()) {
@@ -367,5 +379,23 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             sb.append(String.valueOf(i));
             mDebtAmount.setText(sb.toString());
         }
+    }
+
+
+    private void checkPeopleOnCreditor() {
+        boolean creditorSet = false;
+        for (Person person : peopleArraylist) {
+            if (person.isCurrentCreditor()) {
+                mCreditorTextView.setText(person.getName());
+                creditorSet = true;
+            }
+            if (!creditorSet) {
+                mCreditorTextView.setText("no creditor");
+            }
+        }
+    }
+
+    public void setPeopleArraylist(List<Person> peopleArraylist) {
+        this.peopleArraylist = peopleArraylist;
     }
 }

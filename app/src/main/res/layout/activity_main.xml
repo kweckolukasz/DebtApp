@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginBottom="8dp"
         android:clipToPadding="false"
         app:cardCornerRadius="1dp"
         app:cardElevation="6dp">
@@ -27,6 +26,7 @@
 
             <TextView
                 android:id="@+id/creditor_textView"
+                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"

@@ -14,6 +14,7 @@ public class AddEditPersonActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = AddEditPersonActivity.class.getPackage().getName()+"Extra_name";
     public static final String EXTRA_ID = AddEditPersonActivity.class.getPackage().getName()+"Extra_id";
+    public static final String IS_CURRENT_CREDITOR_EDIT = "this is current creditor";
     private EditText mNameEditText;
 
     @Override
@@ -30,6 +31,7 @@ public class AddEditPersonActivity extends AppCompatActivity {
             mNameEditText.setText(intent.getStringExtra(EXTRA_NAME));
         }else {
             setTitle("add person");
+            mNameEditText.setText("");
         }
     }
 
@@ -43,8 +45,12 @@ public class AddEditPersonActivity extends AppCompatActivity {
 
         Intent data = new Intent();
         int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        boolean isCurrentCreditor = getIntent().getBooleanExtra(PeopleListActivity.IS_CURRENT_CREDITOR, false);
         if (id!=-1){
             data.putExtra(EXTRA_ID, id);
+        }
+        if (isCurrentCreditor){
+            data.putExtra(IS_CURRENT_CREDITOR_EDIT, true);
         }
         data.putExtra(EXTRA_NAME, name);
         setResult(RESULT_OK,data);
