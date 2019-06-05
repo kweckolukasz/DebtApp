@@ -40,6 +40,8 @@ public class Person implements Serializable, Comparable<Person> {
 
     private Integer balance = 0;
 
+    private Integer tempBalance = 0;
+
     private boolean currentCreditor = false;
 
     private boolean currentDebtor = false;
@@ -149,4 +151,13 @@ public class Person implements Serializable, Comparable<Person> {
     public void setCurrentValue(int currentValue) {
         this.currentValue = currentValue;
     }
+
+    public Integer getTempBalance() {
+        return tempBalance;
+    }
+
+    public void setTempBalance(Integer tempBalance) {
+        this.tempBalance = tempBalance;
+    }
+
 }

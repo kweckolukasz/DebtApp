@@ -79,7 +79,7 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
                 dateDesc = sdf.format(debtDate);
 
         }
-        holder.mDate.setText(sdf.format(current.getDate()));
+        holder.mDate.setText(dateDesc);
 
 
     }

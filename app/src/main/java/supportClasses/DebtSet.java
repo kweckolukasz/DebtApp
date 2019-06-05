@@ -77,6 +77,6 @@ public class DebtSet implements Serializable, Comparable<DebtSet> {
     @Override
     public int compareTo(DebtSet o) {
         //return o.getDate().compareTo(this.date);
-        return this.date.compareTo(o.getDate());
+        return o.getDate().compareTo(this.date);
     }
 }

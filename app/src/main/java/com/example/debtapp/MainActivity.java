@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         }
         int currentValue = Integer.valueOf(mDebtAmount.getText().toString());
         if (currentValue != 0 && debtors.size() != 0) {
-            if (debtors.size() != 1){
-                if (currentValue % 2 == 0) currentValue = currentValue/debtors.size();
-                else currentValue = currentValue/debtors.size()+1;
+            if (debtors.size() != 1) {
+                if (currentValue % 2 == 0) currentValue = currentValue / debtors.size();
+                else currentValue = currentValue / debtors.size() + 1;
             }
         } else currentValue = 0;
         for (Person debtor : debtors) {
@@ -167,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                     return false;
                 }
                 Collections.sort(peopleArraylist);
+                for (Person person :peopleArraylist) {
+                    person.setTempBalance(person.getBalance());
+                    person.setBalanced(false);
+                    person.setMoneyFlow(new ArrayList<DebtSet>());
+                }
                 createMoneyFlows(0, peopleArraylist.size() - 1);
                 Intent intent3 = new Intent(MainActivity.this, MoneyFlowActivity.class);
                 startActivity(intent3);
@@ -183,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         Integer value = Integer.valueOf(mDebtAmount.getText().toString());
         if (value <= 0) {
             Toast.makeText(this, "debt can't be 0 or less", Toast.LENGTH_LONG).show();
+            mDebtAmount.setText("0");
             return;
         }
 
@@ -200,14 +206,19 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
 
         for (Person debtor : currentDebtors) {
             if (currentDebtors.size() > 1) {
-                Integer splitedValue = value / currentDebtors.size() + 1;
+                Integer splitedValue = value / currentDebtors.size();
+                if (value % currentDebtors.size() != 0){
+                    splitedValue = value / currentDebtors.size() + 1;
+                }
                 DebtSet debtSet = new DebtSet(currentCreditor.getName(), splitedValue, debtor.getName());
                 if (mDescription.getText() != null)
                     debtSet.setDescription(mDescription.getText().toString());
                 debtSet.setDate(new Date());
                 currentCreditor.addDebt(debtSet);
                 debtor.setBalance(debtor.getBalance() - splitedValue);
+                debtor.setTempBalance(debtor.getBalance());
                 currentCreditor.setBalance(currentCreditor.getBalance() + splitedValue);
+                currentCreditor.setTempBalance(currentCreditor.getBalance());
                 debtor.setCurrentDebtor(false);
                 personViewModel.update(debtor);
             }
@@ -218,7 +229,9 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 debtSet.setDate(new Date());
                 currentCreditor.addDebt(debtSet);
                 debtor.setBalance(debtor.getBalance() - value);
+                debtor.setTempBalance(debtor.getBalance());
                 currentCreditor.setBalance(currentCreditor.getBalance() + value);
+                currentCreditor.setTempBalance(currentCreditor.getBalance());
                 debtor.setCurrentDebtor(false);
                 personViewModel.update(debtor);
             }
@@ -230,35 +243,30 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     }
 
     private void createMoneyFlows(int creditorIndex, int debtorIndex) {
-        for (Person person : peopleArraylist) {
-            person.setBalanced(false);
-            person.setMoneyFlow(new ArrayList<DebtSet>());
-            personViewModel.update(person);
-        }
         createMoneyFlows_1stStep();
         createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
+
     }
 
     private void createMoneyFlows_1stStep() {
         for (Person person : peopleArraylist) {
-            Log.d(TAG, "createMoneyFlows_1stStep: amount of debtSet: " + person.getDebtSets().size());
-            if (person.getBalance() == 0) {
+            if (person.getTempBalance() == 0) {
                 person.setBalanced(true);
                 continue;
             }
-            Log.d(TAG, "createMoneyFlows: personBalance " + person.getBalance());
             Person creditor = person;
-            Integer creditorBalance = person.getBalance();
-            for (int i = peopleArraylist.size() - 1; i == 0; i--) {
+            Integer creditorBalance = person.getTempBalance();
+            for (int i = peopleArraylist.size() - 1; i >= 0; i--) {
                 Person debtor = peopleArraylist.get(i);
-                Integer debtorBalance = debtor.getBalance();
-                if (debtor.getBalance().compareTo(0) < 0) {
+                Integer debtorBalance = debtor.getTempBalance();
+                if (debtorBalance.compareTo(0) < 0) {
                     if (creditorBalance.compareTo(Math.abs(debtorBalance)) == 0) {
                         creditor.setBalanced(true);
-                        debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
+                        debtor.addMoneyFlow(creditor.getName(), creditorBalance, debtor.getName());
                         debtor.setBalanced(true);
                         personViewModel.update(creditor);
                         personViewModel.update(debtor);
+                        Log.d(TAG, "createMoneyFlows_1stStep: debtor.addMoneyFlow("+creditor.getName()+", "+creditorBalance+", "+debtor.getName()+");");
                     }
                 }
             }
@@ -267,46 +275,53 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
 
     private void createMoneyFlows_2ndStep(int creditorIndex, int debtorIndex) {
         Collections.sort(peopleArraylist);
+        int endIndex = peopleArraylist.size()-1;
+
         Person creditor = peopleArraylist.get(creditorIndex);
         Person debtor = peopleArraylist.get(debtorIndex);
+
         if (creditor.isBalanced()) {
-            for (int i = creditorIndex + 1; i < peopleArraylist.size(); i++) {
-                if (peopleArraylist.get(i).getBalance().compareTo(0) <= 0) return;
-                if (!peopleArraylist.get(i).isBalanced()) {
+            for (int i = creditorIndex; i < peopleArraylist.size(); i++) {
+                if (!peopleArraylist.get(i).isBalanced() && peopleArraylist.get(i).getBalance().compareTo(0) > 0) {
                     createMoneyFlows_2ndStep(i, debtorIndex);
                 }
             }
         }
         if (debtor.isBalanced()) {
-            for (int i = debtorIndex - 1; i >= 0; i--) {
-                if (peopleArraylist.get(i).getBalance().compareTo(0) >= 0) return;
-                if (!peopleArraylist.get(i).isBalanced()) {
+            for (int i = debtorIndex; i >= 0; i--) {
+                if (!peopleArraylist.get(i).isBalanced() && peopleArraylist.get(i).getBalance().compareTo(0) < 0) {
                     createMoneyFlows_2ndStep(creditorIndex, i);
                 }
             }
         }
-        if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) > 0) {
-            debtor.addMoneyFlow(creditor.getName(), debtor.getBalance() * (-1), debtor.getName());
-            Log.d(TAG, "createMoneyFlows_2ndStep: creditor>debtor");
-            debtor.setBalanced(true);
-            debtorIndex--;
-            createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
-        } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) == 0) {
-            debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
-            Log.d(TAG, "createMoneyFlows_2ndStep: creditor = debtor");
-            debtor.setBalanced(true);
-            debtorIndex--;
-            creditorIndex++;
-            createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
-        } else if (creditor.getBalance().compareTo(Math.abs(debtor.getBalance())) < 0) {
-            debtor.addMoneyFlow(creditor.getName(), creditor.getBalance(), debtor.getName());
-            Log.d(TAG, "createMoneyFlows_2ndStep: creditor < debtor");
-            creditor.setBalanced(true);
-            creditorIndex++;
-            createMoneyFlows_2ndStep(creditorIndex, debtorIndex);
+
+        Integer creditorBalance = creditor.getTempBalance();
+        Integer debtorBalance = debtor.getTempBalance();
+
+        if (!(creditor.isBalanced() && debtor.isBalanced())) {
+            if (creditorBalance.compareTo(Math.abs(debtorBalance)) > 0) {
+                debtor.addMoneyFlow(creditor.getName(), debtorBalance * (-1), debtor.getName());
+                Log.d(TAG, "> createMoneyFlows_2ndStep: debtor.addMoneyFlow("+creditor.getName()+", "+debtorBalance * (-1)+", "+debtor.getName()+");");
+                creditor.setTempBalance(creditorBalance + debtorBalance);
+                debtor.setBalanced(true);
+                personViewModel.update(debtor);
+                createMoneyFlows_2ndStep(0, endIndex);
+            } else if (creditorBalance.compareTo(Math.abs(debtorBalance)) == 0) {
+                debtor.addMoneyFlow(creditor.getName(), creditorBalance, debtor.getName());
+                Log.d(TAG, "== createMoneyFlows_2ndStep: debtor.addMoneyFlow("+creditor.getName()+", "+creditorBalance+", "+debtor.getName()+");");
+                debtor.setBalanced(true);
+                creditor.setBalanced(true);
+                personViewModel.update(debtor);
+                createMoneyFlows_2ndStep(0, endIndex);
+            } else if (creditorBalance.compareTo(Math.abs(debtorBalance)) < 0) {
+                debtor.addMoneyFlow(creditor.getName(), creditorBalance, debtor.getName());
+                Log.d(TAG, "< createMoneyFlows_2ndStep: debtor.addMoneyFlow("+creditor.getName()+", "+creditorBalance+", "+debtor.getName()+");");
+                creditor.setBalanced(true);
+                debtor.setTempBalance(debtorBalance + creditorBalance);
+                personViewModel.update(debtor);
+                createMoneyFlows_2ndStep(0, endIndex);
+            }
         }
-        personViewModel.update(creditor);
-        personViewModel.update(debtor);
     }
 
     private void clearAlldebtsAndData() {
