@@ -13,10 +13,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import Adapters.CheckboxesAdapter;
 import Room.Person;
@@ -186,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
 
     public void submitDebt(View view) {
         Integer value = Integer.valueOf(mDebtAmount.getText().toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("pl", "PL"));
         if (value <= 0) {
             Toast.makeText(this, "debt can't be 0 or less", Toast.LENGTH_LONG).show();
             mDebtAmount.setText("0");
@@ -213,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 DebtSet debtSet = new DebtSet(currentCreditor.getName(), splitedValue, debtor.getName());
                 if (mDescription.getText() != null)
                     debtSet.setDescription(mDescription.getText().toString());
+                Date currentDate = new Date();
                 debtSet.setDate(new Date());
                 currentCreditor.addDebt(debtSet);
                 debtor.setBalance(debtor.getBalance() - splitedValue);
@@ -220,13 +224,17 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
                 currentCreditor.setBalance(currentCreditor.getBalance() + splitedValue);
                 currentCreditor.setTempBalance(currentCreditor.getBalance());
                 debtor.setCurrentDebtor(false);
+
+                Log.d(TAG, "submitDebt: date: "+sdf.format(currentDate));
                 personViewModel.update(debtor);
             }
             if (currentDebtors.size() == 1) {
                 DebtSet debtSet = new DebtSet(currentCreditor.getName(), value, debtor.getName());
                 if (mDescription.getText() != null)
                     debtSet.setDescription(mDescription.getText().toString());
+                Date currentDate = new Date();
                 debtSet.setDate(new Date());
+                Log.d(TAG, "submitDebt: date: "+sdf.format(currentDate));
                 currentCreditor.addDebt(debtSet);
                 debtor.setBalance(debtor.getBalance() - value);
                 debtor.setTempBalance(debtor.getBalance());

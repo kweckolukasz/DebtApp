@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
@@ -57,28 +58,35 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
 
         if (current.getDescription() != null) holder.mDescription.setText(current.getDescription());
 
-        String dateDesc;
+        String dateDesc = "no date";
         Calendar date = Calendar.getInstance();
         date.setTime(current.getDate());
         long debtDate = current.getDate().getTime();
         long now = new Date().getTime();
-        long diff = now - debtDate;
-        int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
-        switch (days) {
-            case 0:
-                dateDesc = "dziś";
-                break;
-            case 1:
-                dateDesc = "wczoraj";
-                break;
-            case 2:
-                dateDesc = "przedwczoraj";
-                break;
-            default:
-                dateDesc = sdf.format(debtDate);
+        long diff = (now - debtDate)/60000;
+        //int minutes = (int) TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS);
+        int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MINUTES);
+        int hours = (int) TimeUnit.HOURS.convert(diff, TimeUnit.MINUTES);
+        Log.d(TAG, "onBindViewHolder: "+current.getDebtor()+" minutes: "+diff+" hours: "+hours+" days: "+days);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy", new Locale("pl", "PL"));
 
+        if (diff<60) {
+            dateDesc = diff + " minut temu";
+        }else if (hours>=1 && hours<=24){
+            dateDesc = hours + " godzin temu";
+        }else if (days>=1 && days<=7){
+            switch (days) {
+                case 1:
+                    dateDesc = "wczoraj";
+                    break;
+                case 2:
+                    dateDesc = "przedwczoraj";
+                    break;
+            }
+        } else {
+            dateDesc = sdf.format(debtDate);
         }
+
         holder.mDate.setText(dateDesc);
 
 
