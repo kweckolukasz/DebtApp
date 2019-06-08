@@ -42,7 +42,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
     public void onBindViewHolder(@NonNull PersonListHolder holder, int position) {
         final Person current = people.get(position);
         holder.nameTextView.setText(current.getName());
-        holder.balanceTextView.setText(String.valueOf(current.getBalance()));
+        holder.balanceTextView.setText("Balans: "+String.valueOf(current.getBalance()));
         holder.deletePersonImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

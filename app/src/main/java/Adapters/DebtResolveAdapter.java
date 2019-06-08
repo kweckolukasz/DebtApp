@@ -33,9 +33,9 @@ public class DebtResolveAdapter extends RecyclerView.Adapter<DebtResolveAdapter.
     public void onBindViewHolder(@NonNull DebtHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder");
         DebtSet current = allMoneyFlow.get(position);
-        holder.mDebtorTextView.setText(current.getDebtor()+" musi oddać ");
-        holder.mAmountTextView.setText(String.valueOf(current.getValue())+" zł ");
-        holder.mCreditorTextView.setText(current.getCreditor()+"owi");
+        holder.mDebtorTextView.setText(current.getDebtor());
+        holder.mAmountTextView.setText(String.valueOf(current.getValue()));
+        holder.mCreditorTextView.setText(current.getCreditor());
     }
 
     @Override
