@@ -38,12 +38,10 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     TextView mDebtAmount;
     EditText mDescription;
     RecyclerView mCheckboxesRecyclerView;
-    ImageButton mSelectAllButton;
     ImageButton mNumericBackspaceImageButton;
     TextView mCreditorTextView;
 
     List<Person> peopleArraylist = new ArrayList<>();
-
     private PersonViewModel personViewModel;
     public static final int ADD_PERSON_REQUEST = 1;
     public static final int EDIT_CREDITOR_REQUEST = 2;
@@ -60,13 +58,6 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         context = getApplicationContext();
         mCheckboxesRecyclerView = findViewById(R.id.checkboxes);
         mDebtAmount = findViewById(R.id.debt_amount);
-        mSelectAllButton = findViewById(R.id.select_all_button);
-        mSelectAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         mDescription = findViewById(R.id.debt_desc);
         mCreditorTextView = findViewById(R.id.creditor_textView);
         mNumericBackspaceImageButton = findViewById(R.id.numeric_backspace_image_button);
