@@ -1,7 +1,11 @@
 package com.example.debtapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,6 +69,13 @@ public class DeactivatedHistoryActivity extends AppCompatActivity implements Deb
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.deactivated_history_activity_menu, menu);
+        return true;
+    }
+
+    @Override
     public void onDeleteDebtClicked(DebtSet debtSet) {
         Log.d(TAG, "onDeleteDebtClicked debtSet: "+debtSet.toString()+" date: "+debtSet.getDate());
         for (Person person: peopleArrayList){
@@ -79,6 +90,17 @@ public class DeactivatedHistoryActivity extends AppCompatActivity implements Deb
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.go_to_home:
+                Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent2);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void updatePerson(Person person) {

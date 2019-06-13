@@ -35,9 +35,7 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("history");
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_home_black_24dp);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("historia");
         setContentView(R.layout.activity_history);
 
         final RecyclerView recyclerView = findViewById(R.id.history_recyclerView);
@@ -118,10 +116,7 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
                 Intent intent = new Intent(getApplicationContext(), DeactivatedHistoryActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.go_to_home:
-                Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent2);
-                return true;
+            
         }
         return super.onOptionsItemSelected(item);
     }

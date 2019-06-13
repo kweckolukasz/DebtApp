@@ -19,6 +19,7 @@ import supportClasses.DebtSet;
 
 @Entity(tableName = "person_table")
 public class Person implements Serializable, Comparable<Person> {
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj.getClass().isInstance(Person.class)){
