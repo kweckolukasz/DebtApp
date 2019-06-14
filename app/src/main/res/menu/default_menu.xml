@@ -2,15 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/show_deleted_debts"
-        android:title="długi anulowane"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/select_range"
         android:icon="@drawable/account_group"
         android:title="zakres osób"
         app:showAsAction="always" />
-
-
 </menu>

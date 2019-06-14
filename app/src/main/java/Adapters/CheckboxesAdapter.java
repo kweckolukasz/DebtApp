@@ -1,5 +1,6 @@
 package Adapters;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,11 @@ public class CheckboxesAdapter extends RecyclerView.Adapter<CheckboxesAdapter.Pe
     public void onBindViewHolder(@NonNull PersonHolder holder, int position) {
         Person current = people.get(position);
         holder.personName.setText(current.getName());
+        if (!current.isActive()){
+            holder.personName.setTextColor(Color.GRAY);
+        } else {
+            holder.personName.setTextColor(Color.BLACK);
+        }
         holder.itemView.setId(current.getId());
         CardView cardView =(CardView) holder.itemView;
         TextView currentValue = cardView.findViewById(R.id.item_person_value);

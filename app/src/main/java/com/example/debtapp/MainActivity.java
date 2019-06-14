@@ -2,6 +2,7 @@ package com.example.debtapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
     }
 
     public void submitDebt(View view) {
+
         Integer value = Integer.valueOf(mDebtAmount.getText().toString());
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("pl", "PL"));
         if (value <= 0) {
@@ -201,42 +203,40 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         }
 
         for (Person debtor : currentDebtors) {
-            if (currentDebtors.size() > 1) {
-                Integer splitedValue = value / currentDebtors.size();
+
+            Integer splitedValue;
+
+            if (currentDebtors.size() == 1) {
+                splitedValue = value;
+            } else {
+                splitedValue = value / currentDebtors.size();
                 if (value % currentDebtors.size() != 0) {
                     splitedValue = value / currentDebtors.size() + 1;
                 }
-                DebtSet debtSet = new DebtSet(currentCreditor.getName(), splitedValue, debtor.getName());
-                if (mDescription.getText() != null)
-                    debtSet.setDescription(mDescription.getText().toString());
-                Date currentDate = new Date();
-                debtSet.setDate(new Date());
+            }
+
+            DebtSet debtSet = new DebtSet(currentCreditor.getName(), splitedValue, debtor.getName());
+            if (mDescription.getText() != null)
+                debtSet.setDescription(mDescription.getText().toString());
+            Date currentDate = new Date();
+            debtSet.setDate(new Date());
+            if (currentCreditor.isActive() && debtor.isActive()) {
                 currentCreditor.addDebt(debtSet);
                 debtor.setBalance(debtor.getBalance() - splitedValue);
                 debtor.setTempBalance(debtor.getBalance());
                 currentCreditor.setBalance(currentCreditor.getBalance() + splitedValue);
                 currentCreditor.setTempBalance(currentCreditor.getBalance());
                 debtor.setCurrentDebtor(false);
-
-                Log.d(TAG, "submitDebt: date: " + sdf.format(currentDate));
-                personViewModel.update(debtor);
-            }
-            if (currentDebtors.size() == 1) {
-                DebtSet debtSet = new DebtSet(currentCreditor.getName(), value, debtor.getName());
-                if (mDescription.getText() != null)
-                    debtSet.setDescription(mDescription.getText().toString());
-                Date currentDate = new Date();
-                debtSet.setDate(new Date());
-                Log.d(TAG, "submitDebt: date: " + sdf.format(currentDate));
+            } else if (!currentCreditor.isActive() || !debtor.isActive()) {
+                debtSet.setActive(false);
                 currentCreditor.addDebt(debtSet);
-                debtor.setBalance(debtor.getBalance() - value);
-                debtor.setTempBalance(debtor.getBalance());
-                currentCreditor.setBalance(currentCreditor.getBalance() + value);
-                currentCreditor.setTempBalance(currentCreditor.getBalance());
                 debtor.setCurrentDebtor(false);
-                personViewModel.update(debtor);
             }
+
+            Log.d(TAG, "submitDebt: date: " + sdf.format(currentDate));
+            personViewModel.update(debtor);
         }
+
         personViewModel.update(currentCreditor);
         mDebtAmount.setText("0");
         mDescription.setText("");
@@ -340,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
             person.setBalanced(false);
             person.setDebtSets(new ArrayList<DebtSet>());
             person.setMoneyFlow(new ArrayList<DebtSet>());
+            person.setActive(true);
             personViewModel.update(person);
         }
     }
@@ -454,6 +455,11 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         for (Person person : peopleArraylist) {
             if (person.isCurrentCreditor()) {
                 mCreditorTextView.setText(person.getName());
+                if (!person.isActive()) {
+                    mCreditorTextView.setTextColor(Color.GRAY);
+                } else {
+                    mCreditorTextView.setTextColor(Color.BLACK);
+                }
                 creditorSet = true;
             }
             if (!creditorSet) {

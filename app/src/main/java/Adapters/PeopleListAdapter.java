@@ -49,6 +49,17 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                 onPersonEditListener.onDeletePersonButton(current);
             }
         });
+        holder.deactivatePersonImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPersonEditListener.onDeactivatePersonButton(current);
+            }
+        });
+        if (current.isActive()){
+            holder.deactivatePersonImageButton.setImageDrawable(holder.itemView.getResources().getDrawable(R.drawable.ic_check_activate_24dp));
+        } else {
+            holder.deactivatePersonImageButton.setImageDrawable(holder.itemView.getResources().getDrawable(R.drawable.ic_check_deactivate_24dp));
+        }
     }
 
     @Override
@@ -63,6 +74,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
         private TextView nameTextView;
         private TextView surNameTextView;
         private TextView balanceTextView;
+        private ImageButton deactivatePersonImageButton;
         private ImageButton deletePersonImageButton;
 
         public PersonListHolder(@NonNull View itemView, OnPersonEditListener onPersonEditListener) {
@@ -70,6 +82,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
             nameTextView = itemView.findViewById(R.id.person_list_cardview_textView_name);
             surNameTextView = itemView.findViewById(R.id.person_list_cardview_textView_surName);
             balanceTextView = itemView.findViewById(R.id.person_list_cardview_textView_balance);
+            deactivatePersonImageButton = itemView.findViewById(R.id.person_list_cardview_image_button_deactivate_person);
             deletePersonImageButton = itemView.findViewById(R.id.person_list_cardview_image_button_delete_person);
             this.onPersonEditListener = onPersonEditListener;
             itemView.setOnClickListener(this);
@@ -88,6 +101,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
     public interface OnPersonEditListener {
         void onPersonEditClick(Person person);
         void onDeletePersonButton(Person person);
+        void onDeactivatePersonButton(Person person);
     }
 
 }

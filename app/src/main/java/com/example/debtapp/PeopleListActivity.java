@@ -22,7 +22,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import supportClasses.DebtSet;
+import supportClasses.Calculations;
 
 public class PeopleListActivity extends AppCompatActivity implements PeopleListAdapter.OnPersonEditListener {
 
@@ -32,6 +32,38 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
     public static final int EDIT_PERSON_REQUEST = 2;
     private DeletePersonDialog deletePersonDialog = new DeletePersonDialog();
     private ArrayList<Person> peopleArrayList = new ArrayList<>();
+    Calculations calculations = new Calculations();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.people_list_recycler_view);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("people list");
+
+
+        RecyclerView mPeopleListRecyclerView = findViewById(R.id.people_list_recycler_view);
+        mPeopleListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mPeopleListRecyclerView.setHasFixedSize(true);
+        final PeopleListAdapter peopleListAdapter = new PeopleListAdapter(this);
+        mPeopleListRecyclerView.setAdapter(peopleListAdapter);
+
+        personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
+        personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
+            @Override
+            public void onChanged(List<Person> people) {
+                Log.d(TAG, "onChanged");
+                peopleArrayList = (ArrayList<Person>) people;
+                peopleListAdapter.setPeople(people);
+                calculations.setPeople(people);
+
+            }
+        });
+
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -54,33 +86,6 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.people_list_recycler_view);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("people list");
-        RecyclerView mPeopleListRecyclerView = findViewById(R.id.people_list_recycler_view);
-        mPeopleListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mPeopleListRecyclerView.setHasFixedSize(true);
-        final PeopleListAdapter peopleListAdapter = new PeopleListAdapter(this);
-        mPeopleListRecyclerView.setAdapter(peopleListAdapter);
-
-        personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
-        personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
-            @Override
-            public void onChanged(List<Person> people) {
-                Log.d(TAG, "onChanged");
-                peopleArrayList = (ArrayList<Person>) people;
-                peopleListAdapter.setPeople(people);
-
-            }
-        });
-
-
-    }
-
 
     @Override
     public void onPersonEditClick(Person person) {
@@ -98,7 +103,27 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
         deletePersonDialog.setPerson(person);
         deletePersonDialog.setPersonViewModel(personViewModel);
         deletePersonDialog.setPeople(peopleArrayList);
-        deletePersonDialog.show(getSupportFragmentManager(), "deletePerson");
+        deletePersonDialog.setCalculations(calculations);
+        deletePersonDialog.show(getSupportFragmentManager(), "deactivatePerson");
+    }
+
+    @Override
+    public void onDeactivatePersonButton(Person person) {
+
+        String name = person.getName();
+
+        if (person.isActive()){
+            calculations.deactivatePerson(name);
+            person.setActive(false);
+            for (Person person1 : peopleArrayList){
+                personViewModel.update(person1);
+            }
+        } else {
+            calculations.activatePerson(name);
+            person.setActive(true);
+            personViewModel.update(person);
+        }
+
     }
 
     public static class DeletePersonDialog extends DialogFragment {
@@ -106,6 +131,7 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
         private Person person;
         private PersonViewModel personViewModel;
         private ArrayList<Person> people;
+        private Calculations calculations;
 
         public void setPeople(ArrayList<Person> people) {
             this.people = people;
@@ -121,6 +147,10 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
 
         public void setPerson(Person person) {
             this.person = person;
+        }
+
+        public void setCalculations(Calculations calculations) {
+            this.calculations = calculations;
         }
 
         @NonNull
@@ -147,40 +177,11 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
 
         private void deletePerson() {
             String name = person.getName();
-            for (Person person1 : people){
-                if (person1.getDebtSets() != null || person1.getDebtSets().size() != 0){
-                    ArrayList<DebtSet> debtSets = person1.getDebtSets();
-
-                    for (DebtSet debtSet : debtSets){
-
-                        if (debtSet.getCreditor().equals(name)){
-                            Person debtor;
-                            for (Person person2: people){
-                                if (person2.getName().equals(debtSet.getDebtor())) {
-                                    debtor = person2;
-                                    debtor.setBalance(debtor.getBalance() + debtSet.getValue());
-                                    personViewModel.update(debtor);
-                                    break;
-                                }
-                            }
-
-
-
-                        } else if (debtSet.getDebtor().equals(name)){
-                            Person creditor;
-                            for (Person person3 :people){
-                                if (person3.getName().equals(debtSet.getCreditor())){
-                                    creditor = person3;
-                                    creditor.setBalance(creditor.getBalance() - debtSet.getValue());
-                                    personViewModel.update(creditor);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+            calculations.deactivatePerson(name);
+            for (Person person1 :people){
+                personViewModel.update(person1);
             }
-            personViewModel.delete(person);
+            person.setActive(false);
         }
     }
 }

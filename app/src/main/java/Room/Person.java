@@ -51,6 +51,16 @@ public class Person implements Serializable, Comparable<Person> {
 
     private int currentValue;
 
+    private boolean active = true;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @TypeConverters(supportClasses.TypeConverters.class)
     private ArrayList<DebtSet> debtSets;
 

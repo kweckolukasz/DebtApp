@@ -43,6 +43,14 @@
             android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/person_list_cardview_image_button_deactivate_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/person_list_cardview_textView_balance"
+            android:layout_toRightOf="@id/person_list_cardview_textView_balance"
+            />
+
         <ImageButton
             android:id="@+id/person_list_cardview_image_button_delete_person"
             android:layout_width="wrap_content"
