@@ -49,16 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/person_list_cardview_textView_balance"
             android:layout_toRightOf="@id/person_list_cardview_textView_balance"
+            app:srcCompat="@drawable/ic_check_deactivate_24dp"
             />
 
-        <ImageButton
-            android:id="@+id/person_list_cardview_image_button_delete_person"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_outline_delete_24px" />
+
     </RelativeLayout>
 
 

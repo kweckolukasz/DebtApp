@@ -18,26 +18,31 @@ public class Calculations {
     }
 
     public void deactivatePerson(String name) {
+
         for (Person person1 : people) {
 
-            if (person1.getDebtSets() != null || person1.getDebtSets().size() != 0) {
-                ArrayList<DebtSet> debtSets = person1.getDebtSets();
+            if (person1.isActive()) {
 
-                for (DebtSet debtSet : debtSets) {
+                if (person1.getDebtSets() != null || person1.getDebtSets().size() != 0) {
 
-                    if (debtSet.isActive() && (debtSet.getCreditor().equals(name) || debtSet.getDebtor().equals(name))) {
+                    ArrayList<DebtSet> debtSets = person1.getDebtSets();
 
-                        Person creditor = person1;
-                        Person debtor;
-                        for (Person deb : people) {
-                            if (deb.getName().equals(debtSet.getDebtor())) {
-                                debtor = deb;
-                                debtor.setBalance(debtor.getBalance() + debtSet.getValue());
-                                creditor.setBalance(creditor.getBalance() - debtSet.getValue());
+                    for (DebtSet debtSet : debtSets) {
+
+                        if (debtSet.isActive() && (debtSet.getCreditor().equals(name) || debtSet.getDebtor().equals(name))) {
+
+                            Person creditor = person1;
+                            Person debtor;
+                            for (Person deb : people) {
+                                if (deb.getName().equals(debtSet.getDebtor())) {
+                                    debtor = deb;
+                                    debtor.setBalance(debtor.getBalance() + debtSet.getValue());
+                                    creditor.setBalance(creditor.getBalance() - debtSet.getValue());
+                                }
+
                             }
-
+                            debtSet.setActive(false);
                         }
-                        debtSet.setActive(false);
                     }
                 }
             }
@@ -45,6 +50,7 @@ public class Calculations {
     }
 
     public void activatePerson(String name) {
+
         for (Person person1 : people) {
 
             if (person1.getDebtSets() != null || person1.getDebtSets().size() != 0) {
@@ -59,14 +65,12 @@ public class Calculations {
                         for (Person deb : people) {
                             if (deb.getName().equals(debtSet.getDebtor())) {
                                 debtor = deb;
-                                debtor.setBalance(debtor.getBalance() + debtSet.getValue());
+                                debtor.setBalance(debtor.getBalance() - debtSet.getValue());
                                 creditor.setBalance(creditor.getBalance() + debtSet.getValue());
-                                debtor.setActive(true);
                             }
 
                         }
                         debtSet.setActive(true);
-                        creditor.setActive(true);
                     }
                 }
             }

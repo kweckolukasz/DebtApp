@@ -15,12 +15,12 @@ import Room.Person;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.PersonListHolder> {
+public class DeactivatedPeopleListAdapter extends RecyclerView.Adapter<DeactivatedPeopleListAdapter.PersonListHolder> {
 
     private List<Person> people = new ArrayList<>();
     private OnPersonEditListener onPersonEditListener;
 
-    public PeopleListAdapter(OnPersonEditListener onPersonEditListener) {
+    public DeactivatedPeopleListAdapter(OnPersonEditListener onPersonEditListener) {
         this.onPersonEditListener = onPersonEditListener;
     }
 
@@ -34,7 +34,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
     @Override
     public PersonListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.people_list_item, parent, false);
+                .inflate(R.layout.deacitvated_people_list_item, parent, false);
         return new PersonListHolder(itemView, onPersonEditListener);
     }
 
@@ -49,17 +49,14 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                 onPersonEditListener.onDeletePersonButton(current);
             }
         });
-        holder.deactivatePersonImageButton.setOnClickListener(new View.OnClickListener() {
+        holder.activatePersonImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPersonEditListener.onDeactivatePersonButton(current);
             }
         });
-        if (current.isActive()){
-            holder.deactivatePersonImageButton.setImageDrawable(holder.itemView.getResources().getDrawable(R.drawable.ic_check_activate_24dp));
-        } else {
-            holder.deactivatePersonImageButton.setImageDrawable(holder.itemView.getResources().getDrawable(R.drawable.ic_check_deactivate_24dp));
-        }
+
+
     }
 
     @Override
@@ -74,7 +71,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
         private TextView nameTextView;
         private TextView surNameTextView;
         private TextView balanceTextView;
-        private ImageButton deactivatePersonImageButton;
+        private ImageButton activatePersonImageButton;
         private ImageButton deletePersonImageButton;
 
         public PersonListHolder(@NonNull View itemView, OnPersonEditListener onPersonEditListener) {
@@ -82,7 +79,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
             nameTextView = itemView.findViewById(R.id.person_list_cardview_textView_name);
             surNameTextView = itemView.findViewById(R.id.person_list_cardview_textView_surName);
             balanceTextView = itemView.findViewById(R.id.person_list_cardview_textView_balance);
-            deactivatePersonImageButton = itemView.findViewById(R.id.person_list_cardview_image_button_deactivate_person);
+            activatePersonImageButton = itemView.findViewById(R.id.person_list_cardview_image_button_activate_person);
             deletePersonImageButton = itemView.findViewById(R.id.person_list_cardview_image_button_delete_person);
             this.onPersonEditListener = onPersonEditListener;
             itemView.setOnClickListener(this);

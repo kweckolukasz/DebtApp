@@ -6,11 +6,7 @@
         android:title="długi anulowane"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/select_range"
-        android:icon="@drawable/account_group"
-        android:title="zakres osób"
-        app:showAsAction="always" />
+
 
 
 </menu>

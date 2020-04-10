@@ -1,10 +1,19 @@
 package com.example.debtapp;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +21,6 @@ import java.util.List;
 import Adapters.PeopleListAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import supportClasses.Calculations;
 
 public class PeopleListActivity extends AppCompatActivity implements PeopleListAdapter.OnPersonEditListener {
@@ -30,8 +29,9 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
     private PersonViewModel personViewModel;
     private static final String TAG = "PeopleListActivity";
     public static final int EDIT_PERSON_REQUEST = 2;
-    private DeletePersonDialog deletePersonDialog = new DeletePersonDialog();
+
     private ArrayList<Person> peopleArrayList = new ArrayList<>();
+    private ArrayList<Person> activePeople = new ArrayList<>();
     Calculations calculations = new Calculations();
 
     @Override
@@ -55,8 +55,12 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
             public void onChanged(List<Person> people) {
                 Log.d(TAG, "onChanged");
                 peopleArrayList = (ArrayList<Person>) people;
-                peopleListAdapter.setPeople(people);
-                calculations.setPeople(people);
+                activePeople.clear();
+                for (Person person : peopleArrayList){
+                    if (person.isActive()) activePeople.add(person);
+                }
+                peopleListAdapter.setPeople(activePeople);
+                calculations.setPeople(activePeople);
 
             }
         });
@@ -98,90 +102,39 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
         startActivityForResult(intent, EDIT_PERSON_REQUEST);
     }
 
-    @Override
-    public void onDeletePersonButton(Person person) {
-        deletePersonDialog.setPerson(person);
-        deletePersonDialog.setPersonViewModel(personViewModel);
-        deletePersonDialog.setPeople(peopleArrayList);
-        deletePersonDialog.setCalculations(calculations);
-        deletePersonDialog.show(getSupportFragmentManager(), "deactivatePerson");
-    }
 
     @Override
     public void onDeactivatePersonButton(Person person) {
 
         String name = person.getName();
 
-        if (person.isActive()){
+
             calculations.deactivatePerson(name);
             person.setActive(false);
-            for (Person person1 : peopleArrayList){
-                personViewModel.update(person1);
-            }
-        } else {
-            calculations.activatePerson(name);
-            person.setActive(true);
-            personViewModel.update(person);
+
+        for (Person person1 : activePeople){
+            personViewModel.update(person1);
         }
 
     }
 
-    public static class DeletePersonDialog extends DialogFragment {
-
-        private Person person;
-        private PersonViewModel personViewModel;
-        private ArrayList<Person> people;
-        private Calculations calculations;
-
-        public void setPeople(ArrayList<Person> people) {
-            this.people = people;
-        }
-
-
-        public void setPersonViewModel(PersonViewModel personViewModel) {
-            this.personViewModel = personViewModel;
-        }
-
-        public DeletePersonDialog() {
-        }
-
-        public void setPerson(Person person) {
-            this.person = person;
-        }
-
-        public void setCalculations(Calculations calculations) {
-            this.calculations = calculations;
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder
-                    .setMessage("czy na pewno chcesz usunąć tą osobę i wraz z nią wszystkie długi w których występuje?")
-                    .setPositiveButton("tak", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deletePerson();
-
-                        }
-                    })
-                    .setNegativeButton("nie", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-            return builder.create();
-        }
-
-        private void deletePerson() {
-            String name = person.getName();
-            calculations.deactivatePerson(name);
-            for (Person person1 :people){
-                personViewModel.update(person1);
-            }
-            person.setActive(false);
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.people_list_activity_menu, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.show_deactivated_people:
+                Intent intent = new Intent(getApplicationContext(), DeactivatedPeopleListActivity.class);
+                startActivity(intent);
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

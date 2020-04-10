@@ -8,6 +8,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,12 +22,6 @@ import java.util.List;
 import Adapters.DebtAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import supportClasses.DebtSet;
 
 public class HistoryActivity extends AppCompatActivity implements DebtAdapter.OnDebtItemListener {
@@ -32,11 +33,11 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_history);
+        Log.d(TAG, "onCreate");
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("historia");
-        setContentView(R.layout.activity_history);
 
         final RecyclerView recyclerView = findViewById(R.id.history_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

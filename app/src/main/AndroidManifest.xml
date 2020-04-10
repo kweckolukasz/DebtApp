@@ -16,6 +16,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".DeactivatedPeopleListActivity"
+            android:parentActivityName=".PeopleListActivity"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PeopleListActivity"/>
+        </activity>
+        <activity
             android:name=".DeactivatedHistoryActivity"
             android:parentActivityName=".HistoryActivity"
             tools:targetApi="jelly_bean">
