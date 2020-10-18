@@ -1,8 +1,10 @@
 # DebtApp
-An android application for organizing money flow between people.
-It is my first 100% self-made project.
+Moja pierwsza napisana własnoręcznie i od zera aplikacja.
+Platforma: Android<wersja>, Narzędzie: Android Studio
+Aplikacja służy do rozliczania długów z ich maksymalnym uproszczeniem, można ustawiać różnych wierzycieli i wielu dłużników (dzielenie kwoty).
+Napisałem ją po ukończeniu kursu z Javy, chciałem na start stworzyć coś co i mi się może przydać.
+Początki były ciężkie i burzliwe, wiele zmian w kodzie pisanie jej kilka razy od nowa, bardzo wiele się przy niej nauczyłem.
 
-## How you can use it
+## Architektura 
+MVVM - Model View ViewModel -> https://developer.android.com/jetpack/guide#recommended-app-arch
 
-It works on list of people, everyone can be Debtor and you can set enyone as a Creditor.
-You can calculate debts by one click - you will get simplify amounts that is needed to be transfered between people to get everyone satisfied
