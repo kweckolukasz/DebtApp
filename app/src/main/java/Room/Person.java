@@ -66,6 +66,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     @TypeConverters(supportClasses.TypeConverters.class)
     private ArrayList<DebtSet> moneyFlow;
+
     public Person(String name) {
         Log.d(TAG, "Person: private constructor");
         this.name = name;
