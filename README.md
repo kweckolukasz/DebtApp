@@ -15,11 +15,12 @@ this application can store every expense that occurs in the party.
 At the end you can square it all and you get a few payment orders that will zero all the accounts.
 
 ## Screenshots
-![Example screenshot](./img/final-architecture.png)
+![Example screenshot](./img/)
 
 ## Architecture
 This is how overall architecture looks like:
 ![Architecture Diagram](./img/final-architecture.png)
+TODO: przekreśl webhost, nie masz tego
 Database is set to Room with means that entity (there is only Person entity) is stored on device internal memory.
 Person have a list of debtSets that have all theirs debts, those debtsets are dynamically converted to JSON format by TypeConverter, in that way Person can be stored in
 a database with list of objects - debts.
