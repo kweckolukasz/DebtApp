@@ -13,12 +13,7 @@
         completions."
     </string>
     <string name="login_button_skip_login">skip_login</string>
-    <string name="main_debt_amount_hint">click to type amount</string>
     <string name="main_debt_desc_hint">click to type description</string>
-    <string name="main_arrow_arrow"><![CDATA[------------------->]]></string>
-    <string name="activity_main_enter_new_person">enter new person</string>
     <string name="creditor">creditor</string>
-    <string name="submit">submit</string>
-    <string name="accept_debt">accept debt</string>
 
 </resources>
