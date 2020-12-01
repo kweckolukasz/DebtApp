@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import Adapters.CheckboxesAdapter;
+import Room.GroupWithPeople;
 import Room.Person;
 import ViewModel.PersonViewModel;
 import androidx.annotation.Nullable;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
         personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
             @Override
-            public void onChanged(@Nullable List<Person> people) {
+            public void onChanged(@Nullable List<GroupWithPeople> people) {
                 checkboxesAdapter.setPeople(people);
                 setPeopleArraylist(people);
                 Log.d(TAG, "createMoneyFlows_1stStep: peopleArraylistChanged");

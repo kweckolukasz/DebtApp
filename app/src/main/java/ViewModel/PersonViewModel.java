@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.List;
 
 import Repositories.PersonRepository;
+import Room.GroupWithPeople;
 import Room.Person;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;

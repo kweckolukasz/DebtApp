@@ -16,6 +16,18 @@ import supportClasses.DebtSet;
 @Entity(tableName = "person_table")
 public class Person implements Serializable, Comparable<Person> {
 
+    @Ignore
+    public String TAG = Person.class.getSimpleName();
+
+    public Person(String name) {
+        Log.d(TAG, "Person: private constructor");
+        this.name = name;
+        debtSets = new ArrayList<>();
+        moneyFlow = new ArrayList<>();
+        balanced = false;
+        personInGroupId = 0;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj.getClass().isInstance(Person.class)){
@@ -25,11 +37,16 @@ public class Person implements Serializable, Comparable<Person> {
         return false;
     }
 
-    @Ignore
-    public String TAG = Person.class.getSimpleName();
+    @Override
+    public int compareTo(Person o) {
+        return o.getBalance() - this.balance;
+    }
+
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int personId;
+
+    private int personInGroupId;
 
     private String name;
 
@@ -49,6 +66,12 @@ public class Person implements Serializable, Comparable<Person> {
 
     private boolean active = true;
 
+    @TypeConverters(supportClasses.TypeConverters.class)
+    private ArrayList<DebtSet> debtSets;
+
+    @TypeConverters(supportClasses.TypeConverters.class)
+    private ArrayList<DebtSet> moneyFlow;
+
     public boolean isActive() {
         return active;
     }
@@ -57,19 +80,9 @@ public class Person implements Serializable, Comparable<Person> {
         this.active = active;
     }
 
-    @TypeConverters(supportClasses.TypeConverters.class)
-    private ArrayList<DebtSet> debtSets;
 
-    @TypeConverters(supportClasses.TypeConverters.class)
-    private ArrayList<DebtSet> moneyFlow;
 
-    public Person(String name) {
-        Log.d(TAG, "Person: private constructor");
-        this.name = name;
-        debtSets = new ArrayList<>();
-        moneyFlow = new ArrayList<>();
-        balanced = false;
-    }
+
     public void addMoneyFlow(String creditor, Integer value, String debtor){
         moneyFlow.add(new DebtSet(creditor, value, debtor));
     }
@@ -79,11 +92,9 @@ public class Person implements Serializable, Comparable<Person> {
     public void addDebt(DebtSet debtSet){
         debtSets.add(debtSet);
     }
-    @Override
-    public int compareTo(Person o) {
-        return o.getBalance() - this.balance;
-    }
 
+
+    /*GETTERS AND SETTERS*/
     public String getSurName() {
         return surName;
     }
@@ -129,11 +140,11 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     public int getId() {
-        return id;
+        return personId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.personId = id;
     }
 
     public boolean isCurrentCreditor() {
@@ -168,4 +179,11 @@ public class Person implements Serializable, Comparable<Person> {
         this.tempBalance = tempBalance;
     }
 
+    public int getGroupId() {
+        return personInGroupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.personInGroupId = groupId;
+    }
 }

@@ -6,9 +6,11 @@ import android.util.Log;
 
 import java.util.List;
 
+import Daos.PersonDao;
+import Room.GroupWithPeople;
 import Room.Person;
-import Room.PersonDao;
-import Room.PersonDatabase;
+import Room.AppDatabase;
+
 import androidx.lifecycle.LiveData;
 
 public class PersonRepository {
@@ -20,7 +22,7 @@ public class PersonRepository {
     private String TAG = PersonRepository.class.getSimpleName();
     public PersonRepository(Application application){
         Log.d(TAG, "PersonRepository: ");
-        PersonDatabase database = PersonDatabase.getInstance(application);
+        AppDatabase database = AppDatabase.getInstance(application);
         personDao = database.personDao();
         allPersons = personDao.getAllPersons();
 
@@ -50,7 +52,7 @@ public class PersonRepository {
 
     private static class InsertPersonAsyncTask extends AsyncTask<Person, Void, Void>{
 
-        private  PersonDao personDao;
+        private PersonDao personDao;
 
         private InsertPersonAsyncTask(PersonDao personDao){
             this.personDao = personDao;
@@ -65,7 +67,7 @@ public class PersonRepository {
 
     private static class UpdatePersonAsyncTask extends AsyncTask<Person, Void, Void>{
 
-        private  PersonDao personDao;
+        private PersonDao personDao;
 
         private UpdatePersonAsyncTask(PersonDao personDao){
             this.personDao = personDao;
@@ -80,7 +82,7 @@ public class PersonRepository {
 
     private static class DeletePersonAsyncTask extends AsyncTask<Person, Void, Void>{
 
-        private  PersonDao personDao;
+        private PersonDao personDao;
 
         private DeletePersonAsyncTask(PersonDao personDao){
             this.personDao = personDao;
@@ -95,7 +97,7 @@ public class PersonRepository {
 
     private static class DeleteAllPersonAsyncTask extends AsyncTask<Void, Void, Void>{
 
-        private  PersonDao personDao;
+        private PersonDao personDao;
 
         private DeleteAllPersonAsyncTask(PersonDao personDao){
             this.personDao = personDao;

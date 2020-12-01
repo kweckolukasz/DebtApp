@@ -10,20 +10,22 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = Person.class, version = 13, exportSchema = false)
-public abstract class PersonDatabase extends RoomDatabase {
+import Daos.PersonDao;
 
-    private static String TAG = PersonDatabase.class.getSimpleName();
+@Database(entities = {Person.class, Group.class}, version = 13, exportSchema = false)
+public abstract class AppDatabase extends RoomDatabase {
 
-    private static PersonDatabase instance;
+    private static String TAG = AppDatabase.class.getSimpleName();
+
+    private static AppDatabase instance;
 
     public abstract PersonDao personDao();
 
-    public static synchronized PersonDatabase getInstance(Context context){
+    public static synchronized AppDatabase getInstance(Context context){
         if (instance == null) {
             Log.d(TAG, "getInstance: ");
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    PersonDatabase.class,
+                    AppDatabase.class,
                     "person_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
@@ -45,7 +47,7 @@ public abstract class PersonDatabase extends RoomDatabase {
 
         private PersonDao personDao;
 
-        public PopulateDbAsyncTask(PersonDatabase db) {
+        public PopulateDbAsyncTask(AppDatabase db) {
             Log.d(TAG, "PopulateDbAsyncTask");
             personDao = db.personDao();
         }

@@ -1,4 +1,4 @@
-package Room;
+package Daos;
 
 import java.util.List;
 
@@ -8,6 +8,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import Room.GroupWithPeople;
+import Room.Person;
 
 @Dao
 public interface PersonDao {
@@ -26,4 +29,5 @@ public interface PersonDao {
 
     @Query("SELECT * FROM person_table ORDER BY balance DESC")
     LiveData<List<Person>> getAllPersons();
+
 }
