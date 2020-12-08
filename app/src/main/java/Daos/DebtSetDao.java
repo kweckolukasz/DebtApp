@@ -19,24 +19,7 @@ public interface DebtSetDao {
     @Update
     void update(DebtSet debtSet);
 
-// To musisz robić w viewModel, to miejsce jest tylko do wyciągnięcia danych
-    //Pobierz:
-        //ZGrupy i:
-            //Aktywne:
-                //Unresolved
-                //Resolving
-                //Resolved
-            //NieAktywne:
-                //Unresolved
-                //Resolving
-                //Resolved
-        //PozaGrupą
-             //Aktywne:
-                //Unresolved
-                //Resolving
-                //Resolved
-            //NieAktywne:
-                //Unresolved
-                //Resolving
-                //Resolved
+    @Query("SELECT * From debt_sets")
+    LiveData<List<DebtSet>> getAllDebtSets();
+
 }

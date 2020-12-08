@@ -6,6 +6,11 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "groups")
 public class Group {
 
+    public Group(String description, boolean isActive) {
+        this.description = description;
+        this.isActive = isActive;
+    }
+
     @PrimaryKey
     private int groupId;
     private String description;

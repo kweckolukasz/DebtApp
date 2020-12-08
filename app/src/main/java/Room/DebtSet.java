@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 @Entity(
         tableName = "debt_sets",
@@ -21,7 +22,7 @@ import androidx.room.PrimaryKey;
                 @ForeignKey(
                         entity = Group.class,
                         parentColumns = "groupId",
-                        childColumns = "groupId"
+                        childColumns = "debtSetInGroupId"
                 )
         })
 public class DebtSet {
@@ -38,11 +39,26 @@ public class DebtSet {
 
     private int value;
 
+    @TypeConverters(supportClasses.TypeConverters.class)
     private DebtSetStatuses status;
 
     private boolean isActive;
 
+    public int getDebtSetInGroupId() {
+        return debtSetInGroupId;
+    }
 
+    public void setDebtSetInGroupId(int debtSetInGroupId) {
+        this.debtSetInGroupId = debtSetInGroupId;
+    }
+
+    public DebtSetStatuses getStatus() {
+        return status;
+    }
+
+    public void setStatus(DebtSetStatuses status) {
+        this.status = status;
+    }
 
     public int getDebtSetid() {
         return debtSetid;

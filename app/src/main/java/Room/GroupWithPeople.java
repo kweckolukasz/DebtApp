@@ -12,4 +12,5 @@ public class GroupWithPeople {
             entityColumn = "personInGroupId"
     )
     public List<Person> peopleInGroup;
+
 }

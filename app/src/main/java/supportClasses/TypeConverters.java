@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import androidx.room.TypeConverter;
 
+import Room.DebtSetStatuses;
 
 
 public class TypeConverters {
@@ -28,5 +29,25 @@ public class TypeConverters {
     public String ArraylistToJson(ArrayList<DebtSet> debtSets){
         Log.d(TAG, "ArraylistToJson");
         return gson.toJson(debtSets);
+    }
+
+    @TypeConverter
+    public DebtSetStatuses StringToDebtSetStatus(String debtStatusString){
+
+        switch (debtStatusString){
+            case "Resolved":
+                return DebtSetStatuses.Resolved;
+            case "Resolving":
+                return DebtSetStatuses.Resolving;
+            case "Unresolved":
+                return DebtSetStatuses.Unresolved;
+            default:
+                return DebtSetStatuses.ErrorStatusUnrecognized;
+        }
+    }
+
+    @TypeConverter
+    public String DebtSetStatusToString(DebtSetStatuses debtSetStatus){
+        return debtSetStatus.toString();
     }
 }

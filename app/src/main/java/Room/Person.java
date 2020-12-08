@@ -43,6 +43,26 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
 
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
+    }
+
+    public int getPersonInGroupId() {
+        return personInGroupId;
+    }
+
+    public void setPersonInGroupId(int personInGroupId) {
+        this.personInGroupId = personInGroupId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private int personId;
 

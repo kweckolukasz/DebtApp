@@ -10,6 +10,7 @@ import androidx.room.Update;
 import java.util.List;
 
 import Room.Group;
+import Room.GroupWithDebtSets;
 import Room.GroupWithPeople;
 import Room.Person;
 
@@ -25,13 +26,21 @@ public interface GroupDao {
     @Delete
     void delete(Group group, List<Person> people);
 
+    @Delete
+    void delete(Group group);
+
     @Query("DELETE FROM groups")
     void deleteAll();
 
-    @Query("SELECT * FROM groups WHERE groupId = :i")
-    GroupWithPeople getGroup(int i);
+    @Query("SELECT * FROM groups WHERE isActive = 'true'")
+    LiveData<GroupWithPeople> getActiveGroupWithPeople();
 
     @Query("SELECT * FROM groups")
-    LiveData<List<GroupWithPeople>> getGroups();
+    LiveData<List<Group>> getGroups();
 
+    @Query("SELECT * FROM groups")
+    LiveData<List<GroupWithDebtSets>> getGroupsWithDebtSets();
+
+    @Query("SELECT * FROM groups")
+    LiveData<List<GroupWithPeople>> getGroupWithPeople();
 }

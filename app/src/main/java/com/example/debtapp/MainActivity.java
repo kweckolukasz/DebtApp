@@ -24,6 +24,8 @@ import java.util.Locale;
 import Adapters.CheckboxesAdapter;
 import Room.GroupWithPeople;
 import Room.Person;
+import ViewModel.DebtSetViewModel;
+import ViewModel.GroupViewModel;
 import ViewModel.PersonViewModel;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -45,10 +47,11 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
 
     List<Person> peopleArraylist = new ArrayList<>();
     private PersonViewModel personViewModel;
+    private GroupViewModel groupViewModel;
+    private DebtSetViewModel debtSetViewModel;
     public static final int ADD_PERSON_REQUEST = 1;
     public static final int EDIT_CREDITOR_REQUEST = 2;
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final String DEBT_MAIN_PEOPLE_LIST_MAIN_ACTIVITY = MainActivity.class.getSimpleName() + "global_people_list";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +88,27 @@ public class MainActivity extends AppCompatActivity implements CheckboxesAdapter
         final CheckboxesAdapter checkboxesAdapter = new CheckboxesAdapter(this);
         mCheckboxesRecyclerView.setAdapter(checkboxesAdapter);
 
-
-        personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
+        //TODO pobierz osoby z grupy
+        groupViewModel = ViewModelProviders.of(this).get(GroupViewModel.class);
+        groupViewModel.getActiveGroupWithPeople().observe(this, new Observer<GroupWithPeople>() {
+            @Override
+            public void onChanged(GroupWithPeople groupWithPeople) {
+                checkboxesAdapter.setPeople(groupWithPeople.peopleInGroup);
+                setPeopleArraylist(groupWithPeople.peopleInGroup);
+                checkPeopleOnCreditor();
+            }
+        });
+        /*personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
         personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
             @Override
-            public void onChanged(@Nullable List<GroupWithPeople> people) {
+            public void onChanged(@Nullable List<Person> people) {
                 checkboxesAdapter.setPeople(people);
                 setPeopleArraylist(people);
                 Log.d(TAG, "createMoneyFlows_1stStep: peopleArraylistChanged");
                 Log.d(TAG, "personViewModel -> observer -> onChanged");
                 checkPeopleOnCreditor();
             }
-        });
+        });*/
 
     }//onCreate
 
