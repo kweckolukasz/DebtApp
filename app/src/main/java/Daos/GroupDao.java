@@ -35,6 +35,9 @@ public interface GroupDao {
     @Query("SELECT * FROM groups WHERE isActive = 'true'")
     LiveData<GroupWithPeople> getActiveGroupWithPeople();
 
+    @Query("SELECT * FROM groups WHERE isActive = 'true'")
+    LiveData<GroupWithDebtSets> getActiveGroupWithDebtSets();
+
     @Query("SELECT * FROM groups")
     LiveData<List<Group>> getGroups();
 

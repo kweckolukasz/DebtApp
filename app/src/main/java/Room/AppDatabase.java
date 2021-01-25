@@ -18,7 +18,7 @@ import Daos.DebtSetDao;
 import Daos.GroupDao;
 import Daos.PersonDao;
 
-@Database(entities = {Person.class, Group.class, DebtSet.class}, version = 13, exportSchema = false)
+@Database(entities = {Person.class, Group.class, DebtSet.class}, version = 14, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static String TAG = AppDatabase.class.getSimpleName();
@@ -47,6 +47,7 @@ public abstract class AppDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Log.d(TAG, "onCreate: RoomDatabase.Callback");
+
             new PopulateDbAsyncTask(instance).execute();
         }
     };
@@ -64,8 +65,8 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
             Log.d(TAG, "doInBackground: inserting people");
-            Group group = new Group("default", true);
-            groupDao.insert(group);
+            groupDao.insert(new Group("default", true));
+            groupDao.insert(new Group("OffTheRecords", false));
 
             List<Person> people = new ArrayList<>(Arrays.asList(
                     new Person("Alice"){

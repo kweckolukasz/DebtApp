@@ -12,6 +12,7 @@ import Room.AppDatabase;
 import Room.Group;
 import Room.GroupWithDebtSets;
 import Room.GroupWithPeople;
+import Room.Person;
 
 public class GroupRepository {
     private String TAG = GroupRepository.class.getSimpleName();
@@ -20,6 +21,7 @@ public class GroupRepository {
     private LiveData<List<GroupWithDebtSets>> groupsWithDebtSets;
     private LiveData<List<Group>> groups;
     private LiveData<GroupWithPeople> activeGroupWithPeople;
+    private LiveData<GroupWithDebtSets> activeGroupWithDebtSets;
 
     public GroupRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application);
@@ -28,6 +30,7 @@ public class GroupRepository {
         groups = groupDao.getGroups();
         groupsWithPeople = groupDao.getGroupWithPeople();
         activeGroupWithPeople = groupDao.getActiveGroupWithPeople();
+        activeGroupWithDebtSets = groupDao.getActiveGroupWithDebtSets();
     }
 
     public void insert(Group group){
@@ -44,6 +47,8 @@ public class GroupRepository {
 
     public LiveData<GroupWithPeople> getActiveGroupWithPeople(){return activeGroupWithPeople;}
 
+    public LiveData<GroupWithDebtSets> getActiveGroupWithDebtSets(){return activeGroupWithDebtSets;}
+
     public LiveData<List<GroupWithPeople>> getAllGroupsWithPeople(){
         return groupsWithPeople;
     }
@@ -55,6 +60,7 @@ public class GroupRepository {
     public LiveData<List<Group>> getAllGroups(){
         return groups;
     }
+
 
     private static class InsertGroupAsyncTask extends AsyncTask<Group, Void, Void>{
 

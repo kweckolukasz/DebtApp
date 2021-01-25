@@ -9,7 +9,7 @@ public class GroupWithDebtSets {
     @Embedded public DebtSet debtSet;
     @Relation(
             parentColumn = "groupId",
-            entityColumn = "debtSetInGroupId"
+            entityColumn = "groupId"
     )
     public List<DebtSet> debtSetsInList;
 }

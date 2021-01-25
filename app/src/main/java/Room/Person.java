@@ -3,14 +3,11 @@ package Room;
 import android.util.Log;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-import supportClasses.DebtSet;
 
 
 @Entity(tableName = "person_table")
@@ -22,10 +19,8 @@ public class Person implements Serializable, Comparable<Person> {
     public Person(String name) {
         Log.d(TAG, "Person: private constructor");
         this.name = name;
-        debtSets = new ArrayList<>();
-        moneyFlow = new ArrayList<>();
         balanced = false;
-        personInGroupId = 0;
+        groupId = 0;
     }
 
     @Override
@@ -51,12 +46,12 @@ public class Person implements Serializable, Comparable<Person> {
         this.personId = personId;
     }
 
-    public int getPersonInGroupId() {
-        return personInGroupId;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setPersonInGroupId(int personInGroupId) {
-        this.personInGroupId = personInGroupId;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public void setName(String name) {
@@ -66,7 +61,7 @@ public class Person implements Serializable, Comparable<Person> {
     @PrimaryKey(autoGenerate = true)
     private int personId;
 
-    private int personInGroupId;
+    private int groupId;
 
     private String name;
 
@@ -86,31 +81,12 @@ public class Person implements Serializable, Comparable<Person> {
 
     private boolean active = true;
 
-    @TypeConverters(supportClasses.TypeConverters.class)
-    private ArrayList<DebtSet> debtSets;
-
-    @TypeConverters(supportClasses.TypeConverters.class)
-    private ArrayList<DebtSet> moneyFlow;
-
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-
-
-
-    public void addMoneyFlow(String creditor, Integer value, String debtor){
-        moneyFlow.add(new DebtSet(creditor, value, debtor));
-    }
-    public void addDebt(String creditor, Integer value, String debtor){
-        debtSets.add(new DebtSet(creditor,value, debtor));
-    }
-    public void addDebt(DebtSet debtSet){
-        debtSets.add(debtSet);
     }
 
 
@@ -137,22 +113,6 @@ public class Person implements Serializable, Comparable<Person> {
 
     public void setBalanced(boolean balanced) {
         this.balanced = balanced;
-    }
-
-    public ArrayList<DebtSet> getDebtSets() {
-        return debtSets;
-    }
-
-    public void setDebtSets(ArrayList<DebtSet> debtSets) {
-        this.debtSets = debtSets;
-    }
-
-    public ArrayList<DebtSet> getMoneyFlow() {
-        return moneyFlow;
-    }
-
-    public void setMoneyFlow(ArrayList<DebtSet> moneyFlow) {
-        this.moneyFlow = moneyFlow;
     }
 
     public String getName() {
@@ -197,13 +157,5 @@ public class Person implements Serializable, Comparable<Person> {
 
     public void setTempBalance(Integer tempBalance) {
         this.tempBalance = tempBalance;
-    }
-
-    public int getGroupId() {
-        return personInGroupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.personInGroupId = groupId;
     }
 }

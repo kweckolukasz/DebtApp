@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import supportClasses.DebtSet;
+
+import Room.DebtSet;
 
 public class DebtResolveAdapter extends RecyclerView.Adapter<DebtResolveAdapter.DebtHolder> {
 
@@ -33,9 +34,9 @@ public class DebtResolveAdapter extends RecyclerView.Adapter<DebtResolveAdapter.
     public void onBindViewHolder(@NonNull DebtHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder");
         DebtSet current = allMoneyFlow.get(position);
-        holder.mDebtorTextView.setText(current.getDebtor());
+        holder.mDebtorTextView.setText(current.getDebtorId());
         holder.mAmountTextView.setText(String.valueOf(current.getValue()));
-        holder.mCreditorTextView.setText(current.getCreditor());
+        holder.mCreditorTextView.setText(current.getCreditorId());
     }
 
     @Override

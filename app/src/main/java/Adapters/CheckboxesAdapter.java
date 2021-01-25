@@ -43,14 +43,9 @@ public class CheckboxesAdapter extends RecyclerView.Adapter<CheckboxesAdapter.Pe
     @Override
     public void onBindViewHolder(@NonNull PersonHolder holder, int position) {
         Person current = people.get(position);
-        holder.personName.setText(current.getName());
-        if (!current.isActive()){
-            holder.personName.setTextColor(Color.GRAY);
-        } else {
-            holder.personName.setTextColor(Color.BLACK);
-        }
-        holder.itemView.setId(current.getId());
         CardView cardView =(CardView) holder.itemView;
+        holder.personName.setText(current.getName());
+        holder.itemView.setId(current.getId());
         TextView currentValue = cardView.findViewById(R.id.item_person_value);
         if (current.isCurrentDebtor()){
             cardView.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.green));

@@ -6,7 +6,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 import androidx.room.TypeConverter;
 
@@ -15,21 +21,8 @@ import Room.DebtSetStatuses;
 
 public class TypeConverters {
 
-    Gson gson = new Gson();
-    private String TAG = TypeConverters.class.getSimpleName();
-    @TypeConverter
-    public ArrayList<DebtSet> jsonToArrayList(String json){
-        Log.d(TAG, "jsonToArrayList");
-        if (json == null) return new ArrayList<>();
-        Type listType = new TypeToken<ArrayList<DebtSet>>(){}.getType();
-        return gson.fromJson(json,listType);
-    }
-
-    @TypeConverter
-    public String ArraylistToJson(ArrayList<DebtSet> debtSets){
-        Log.d(TAG, "ArraylistToJson");
-        return gson.toJson(debtSets);
-    }
+    private static DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private static TimeZone timeZone = TimeZone.getTimeZone("Poland");
 
     @TypeConverter
     public DebtSetStatuses StringToDebtSetStatus(String debtStatusString){
@@ -49,5 +42,26 @@ public class TypeConverters {
     @TypeConverter
     public String DebtSetStatusToString(DebtSetStatuses debtSetStatus){
         return debtSetStatus.toString();
+    }
+
+    @TypeConverter
+    public Date StringToDate(String dateDB){
+        if (dateDB != null){
+            try{
+                df.setTimeZone(timeZone);
+                return df.parse(dateDB);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    @TypeConverter
+    public String DateToString(Date date){
+        df.setTimeZone(timeZone);
+        return date == null ? null : df.format(date);
     }
 }

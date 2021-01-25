@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import supportClasses.DebtSet;
 
 public class MoneyFlowActivity extends AppCompatActivity {
 
@@ -33,16 +32,5 @@ public class MoneyFlowActivity extends AppCompatActivity {
         final DebtResolveAdapter debtResolveAdapter = new DebtResolveAdapter();
         mMoneyFlowRecyclerView.setAdapter(debtResolveAdapter);
 
-        personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
-        personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
-            @Override
-            public void onChanged(List<Person> people) {
-                ArrayList<DebtSet> allMoneyFlows = new ArrayList<>();
-                for (Person person:people){
-                    allMoneyFlows.addAll(person.getMoneyFlow());
-                }
-                debtResolveAdapter.setAllMoneyFlow(allMoneyFlows);
-            }
-        });
     }
 }

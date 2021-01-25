@@ -1,10 +1,11 @@
 package Room;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+
+import java.util.Date;
 
 @Entity(
         tableName = "debt_sets",
@@ -22,9 +23,10 @@ import androidx.room.TypeConverters;
                 @ForeignKey(
                         entity = Group.class,
                         parentColumns = "groupId",
-                        childColumns = "debtSetInGroupId"
+                        childColumns = "groupId"
                 )
         })
+
 public class DebtSet {
 
 
@@ -35,21 +37,27 @@ public class DebtSet {
 
     private int creditorId;
 
-    private int debtSetInGroupId;
+    private int groupId;
 
     private int value;
+
+    private String description;
+
+    @TypeConverters(supportClasses.TypeConverters.class)
+    private Date date;
+
 
     @TypeConverters(supportClasses.TypeConverters.class)
     private DebtSetStatuses status;
 
     private boolean isActive;
 
-    public int getDebtSetInGroupId() {
-        return debtSetInGroupId;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setDebtSetInGroupId(int debtSetInGroupId) {
-        this.debtSetInGroupId = debtSetInGroupId;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public DebtSetStatuses getStatus() {
@@ -106,5 +114,21 @@ public class DebtSet {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

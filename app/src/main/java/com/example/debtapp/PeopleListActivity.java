@@ -21,7 +21,6 @@ import java.util.List;
 import Adapters.PeopleListAdapter;
 import Room.Person;
 import ViewModel.PersonViewModel;
-import supportClasses.Calculations;
 
 public class PeopleListActivity extends AppCompatActivity implements PeopleListAdapter.OnPersonEditListener {
 
@@ -32,7 +31,6 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
 
     private ArrayList<Person> peopleArrayList = new ArrayList<>();
     private ArrayList<Person> activePeople = new ArrayList<>();
-    Calculations calculations = new Calculations();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +58,6 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
                     if (person.isActive()) activePeople.add(person);
                 }
                 peopleListAdapter.setPeople(activePeople);
-                calculations.setPeople(activePeople);
 
             }
         });
@@ -107,9 +104,6 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
     public void onDeactivatePersonButton(Person person) {
 
         String name = person.getName();
-
-
-            calculations.deactivatePerson(name);
             person.setActive(false);
 
         for (Person person1 : activePeople){
@@ -127,14 +121,7 @@ public class PeopleListActivity extends AppCompatActivity implements PeopleListA
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.show_deactivated_people:
-                Intent intent = new Intent(getApplicationContext(), DeactivatedPeopleListActivity.class);
-                startActivity(intent);
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
 }

@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import supportClasses.DebtSet;
+
+import Room.DebtSet;
 
 public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
 
@@ -45,13 +46,12 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
         Log.d(TAG, "onBindViewHolder");
 
         final DebtSet current = allDebts.get(position);
-        holder.mCreditorTextView.setText(current.getCreditor());
+        holder.mCreditorTextView.setText(current.getCreditorId());
         holder.mAmountTextView.setText(String.valueOf(current.getValue()));
-        holder.mDebtorTextView.setText(current.getDebtor());
+        holder.mDebtorTextView.setText(current.getDebtorId());
         holder.mDeleteDebtImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: imageButton, debtSet: " + current.toString() + " date: " + current.getDate());
                 onDebtItemListener.onDeleteDebtClicked(current);
             }
         });
@@ -67,7 +67,6 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.DebtHolder> {
         //int minutes = (int) TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS);
         int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MINUTES);
         int hours = (int) TimeUnit.HOURS.convert(diff, TimeUnit.MINUTES);
-        Log.d(TAG, "onBindViewHolder: "+current.getDebtor()+" minutes: "+diff+" hours: "+hours+" days: "+days);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy", new Locale("pl", "PL"));
 
         if (diff<60) {

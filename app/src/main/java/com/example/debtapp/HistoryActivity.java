@@ -20,15 +20,16 @@ import java.util.Collections;
 import java.util.List;
 
 import Adapters.DebtAdapter;
+import Room.DebtSet;
+import Room.GroupWithDebtSets;
 import Room.Person;
+import ViewModel.HistoryViewModel;
 import ViewModel.PersonViewModel;
-import supportClasses.DebtSet;
 
 public class HistoryActivity extends AppCompatActivity implements DebtAdapter.OnDebtItemListener {
 
 
-    private PersonViewModel personViewModel;
-    private List<Person> peopleArrayList = new ArrayList<>();
+    private HistoryViewModel historyViewModel;
     private static final String TAG = HistoryActivity.class.getSimpleName();
 
     @Override
@@ -48,26 +49,11 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
         recyclerView.setAdapter(adapter);
 
 
-        personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
-        personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
-
+        historyViewModel = ViewModelProviders.of(this).get(HistoryViewModel.class);
+        historyViewModel.getGroupWithDebtSets().observe(this, new Observer<GroupWithDebtSets>() {
             @Override
-            public void onChanged(List<Person> people) {
-                Log.d(TAG, "retrieveListOfDebts from people list - size: " + people.size());
-                peopleArrayList = people;
-                ArrayList<DebtSet> debtSets = new ArrayList<>();
-                for (Person pe : people) {
-                    if (!pe.getDebtSets().isEmpty()) {
-                        for (DebtSet debtSet : pe.getDebtSets()) {
-                            if (!debtSet.getDebtor().equals(debtSet.getCreditor())) {
-                                if (debtSet.isActive()) debtSets.add(debtSet);
-                            }
-                        }
-                    }
-                }
-                Log.d(TAG, "onChanged: sending debts to adapter: size: " + debtSets.size());
-                Collections.sort(debtSets);
-                adapter.setDebtSets(debtSets);
+            public void onChanged(GroupWithDebtSets groupWithDebtSets) {
+                adapter.setDebtSets((ArrayList<DebtSet>) groupWithDebtSets.debtSetsInList);
             }
         });
 
@@ -75,32 +61,7 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
 
     @Override
     public void onDeleteDebtClicked(DebtSet debtSetClicked) {
-        Log.d(TAG, "onDeleteDebtClicked debtSetClicked: " + debtSetClicked.toString() + " date: " + debtSetClicked.getDate());
-        for (Person creditor : peopleArrayList) {
-            for (DebtSet debtSetFromArray : creditor.getDebtSets()) {
-                if (debtSetFromArray == debtSetClicked) {
-                    Log.d(TAG, "onDeleteDebtClicked: debtSetFromArray = debtSetClicked");
-                    String debtorName = debtSetFromArray.getDebtor();
-                    Person debtor = null;
-                    for (Person debtorPe : peopleArrayList) {
-                        if (debtorPe.getName().equals(debtorName)) {
-                            debtor = debtorPe;
-                        }
-                    }
-                    if (debtor==null) {
-                        Toast.makeText(this, "debtor=null!!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Integer creditorBalance = creditor.getBalance();
-                    Integer debtorBalance = debtor.getBalance();
-                    creditor.setBalance(creditorBalance - debtSetFromArray.getValue());
-                    debtor.setBalance(debtorBalance + debtSetFromArray.getValue());
-                    debtSetFromArray.setActive(false);
-                    personViewModel.update(creditor);
-                    personViewModel.update(debtor);
-                }
-            }
-        }
+
     }
 
     @Override
@@ -110,15 +71,5 @@ public class HistoryActivity extends AppCompatActivity implements DebtAdapter.On
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.show_deleted_debts:
-                Intent intent = new Intent(getApplicationContext(), DeactivatedHistoryActivity.class);
-                startActivity(intent);
-                return true;
-            
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }

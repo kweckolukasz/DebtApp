@@ -9,8 +9,7 @@ public class GroupWithPeople {
     @Embedded public Person person;
     @Relation(
             parentColumn = "groupId",
-            entityColumn = "personInGroupId"
+            entityColumn = "groupId"
     )
     public List<Person> peopleInGroup;
-
 }

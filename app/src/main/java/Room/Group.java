@@ -6,14 +6,14 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "groups")
 public class Group {
 
-    public Group(String description, boolean isActive) {
-        this.description = description;
+    public Group(String name, boolean isActive) {
+        this.name = name;
         this.isActive = isActive;
     }
 
     @PrimaryKey
     private int groupId;
-    private String description;
+    private String name;
     private boolean isActive;
 
     public int getGroupId() {
@@ -24,12 +24,12 @@ public class Group {
         this.groupId = groupId;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isActive() {

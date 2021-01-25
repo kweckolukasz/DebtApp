@@ -12,7 +12,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import Adapters.RadioAdapter;
+import Room.GroupWithPeople;
 import Room.Person;
+import ViewModel.MainActivityViewModel;
 import ViewModel.PersonViewModel;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,8 +29,8 @@ public class ChooseCreditorActivity extends AppCompatActivity implements RadioAd
     List<Person> peopleArrayList = new ArrayList<>();
 
     RecyclerView mRadioGroupRecyclerView;
-    PersonViewModel personViewModel;
-    public static final String CURRENT_CREDITOR_NAME = null;
+    MainActivityViewModel mainActivityViewModel;
+    public static final String CURRENT_CREDITOR = "CurrentCreditorId";
     public static final String TAG = ChooseCreditorActivity.class.getSimpleName();
 
 
@@ -49,19 +51,11 @@ public class ChooseCreditorActivity extends AppCompatActivity implements RadioAd
         final RadioAdapter radioAdapter = new RadioAdapter(this);
         mRadioGroupRecyclerView.setAdapter(radioAdapter);
 
-        personViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
-        personViewModel.getAllPersons().observe(this, new Observer<List<Person>>() {
+        mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        mainActivityViewModel.getActiveGroupWithPeople().observe(this, new Observer<GroupWithPeople>() {
             @Override
-            public void onChanged(List<Person> people) {
-                Log.d(TAG, "setCreditor onChanged: ");
-                setPeopleArrayList(people);
-                Collections.sort(peopleArrayList, new Comparator<Person>() {
-                    @Override
-                    public int compare(Person o1, Person o2) {
-                        return o1.getName().compareTo(o2.getName());
-                    }
-                });
-                radioAdapter.setPeople(people);
+            public void onChanged(GroupWithPeople groupWithPeople) {
+                peopleArrayList = groupWithPeople.peopleInGroup;
             }
         });
 
@@ -85,14 +79,10 @@ public class ChooseCreditorActivity extends AppCompatActivity implements RadioAd
     private void saveAndExit() {
         if (currentCreditor != null) {
             Intent data = new Intent(this, MainActivity.class);
-            data.putExtra(CURRENT_CREDITOR_NAME, currentCreditor.getName());
-            Log.d(TAG, "setCreditor saveAndExit: currentCreditor: " + currentCreditor.getName());
+            data.putExtra(CURRENT_CREDITOR, currentCreditor.getId());
             setResult(RESULT_OK, data);
             finish();
         }
     }
 
-    public void setPeopleArrayList(List<Person> personArrayList) {
-        this.peopleArrayList = personArrayList;
-    }
 }
